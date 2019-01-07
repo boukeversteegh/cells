@@ -1,0 +1,52 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            image-rendering: optimizeSpeed;
+            /* Older versions of FF          */
+            image-rendering: -moz-crisp-edges;
+            /* FF 6.0+                       */
+            image-rendering: -webkit-optimize-contrast;
+            /* Safari                        */
+            image-rendering: -o-crisp-edges;
+            /* OS X & Windows Opera (12.02+) */
+            image-rendering: pixelated;
+            /* Awesome future-browsers       */
+            -ms-interpolation-mode: nearest-neighbor;
+            /* IE                            */
+            float: left
+        }
+
+        button {
+            float: left
+        }
+
+    </style>
+</head>
+
+<body>
+<canvas id="display" width="1920" height="1080" style="min-height: 480px;"></canvas>
+
+<button id="random">🎁</button>
+<button id="reset">🔄</button>
+<button id="stop">⏸️</button>
+<button id="start">▶️</button>
+<button id="iterate">⏭️</button>
+
+<script type="text/javascript" src="out/production/cells/lib/kotlin.js"></script>
+<script type="text/javascript" src="out/production/cells/cells.js"></script>
+<script type="text/javascript" src="cells.js"></script>
+</body>
+</html>
+
