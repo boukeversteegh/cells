@@ -34,4 +34,9 @@ class Layer(private val w: Int, private val h: Int) {
             }
         }
     }
+
+    @JsName("getCellTypes")
+    fun getCellTypesArray(): Array<CellType> {
+        return cellTypes.toTypedArray();
+    }
 }

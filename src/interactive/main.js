@@ -1,3 +1,5 @@
+'use strict';
+
 class Mouse {
     constructor(canvas) {
         this.x = 0;
@@ -55,6 +57,7 @@ class UI {
         this.canvas.width = this.automaton.w;
         this.canvas.height = this.automaton.h;
         this.ctx = this.canvas.getContext('2d');
+        this.selectedCellType = cells.interactive.Dirt;
 
         this.render();
 
@@ -72,10 +75,12 @@ class UI {
         });
 
         this.start();
+
+        self.initReact();
     }
 
     paint(x, y) {
-        this.automaton.getLayers()[0].set(x, y, cells.interactive.Dirt)
+        this.automaton.getLayers()[0].set(x, y, this.selectedCellType)
     }
 
     render() {
@@ -93,5 +98,11 @@ class UI {
             self.automaton.iterate();
             self.render();
         }, 100);
+    }
+
+    initReact() {
+        const e = React.createElement;
+        const domContainer = document.querySelector('#cell-types');
+        ReactDOM.render(e(CellTypes, {automaton: this.automaton, ui: this}), domContainer);
     }
 }

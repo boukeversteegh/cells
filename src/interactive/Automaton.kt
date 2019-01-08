@@ -47,72 +47,72 @@ class Automaton(val w: Int, val h: Int) {
                 // generate down
                 if (above is Water.Source && c is None) {
                     changes[x to y] = Water.Down
-                    continue
+//                    continue
                 }
 
                 // generate down
                 if (c is None && (left is Water.Spread || right is Water.Spread) && below !== Dirt) {
                     changes[x to y] = Water.Down
-                    continue
+//                    continue
                 }
 
                 // propagate down
                 if (above is Water.Down && c is None) {
                     changes[x to y] = Water.Down
-                    continue
+//                    continue
                 }
 
 
                 // generate spread
                 if (c is Water.Down && below is Dirt) {
                     changes[x to y] = Water.Spread
-                    continue
+//                    continue
                 }
 
                 // generate spread
                 if (c is Water.Down && below is Water.Still) {
                     changes[x to y] = Water.Spread
-                    continue
+//                    continue
                 }
 
                 // propagate spread
                 if (c is None && (left is Water.Spread || right is Water.Spread) && (below is Dirt || below is Water.Still)) {
                     changes[x to y] = Water.Spread
-                    continue
+//                    continue
                 }
 
 
                 // generate bounce
                 if (c is Water.Spread && (left is Dirt || right is Dirt)) {
                     changes[x to y] = Water.Bounce
-                    continue
+//                    continue
                 }
 
                 // propagate bounce
                 if (c is Water.Spread && (left is Water.Bounce || right is Water.Bounce)) {
                     changes[x to y] = Water.Bounce
-                    continue
+//                    continue
                 }
 
 
                 // generate still
                 if (c is Water.Spread && ((left is Water.Bounce || left is Dirt) && (right is Water.Bounce || right is Dirt))) {
                     changes[x to y] = Water.Still
-                    continue
+//                    continue
                 }
 
                 // propagate still
                 if (c is Water.Bounce && (left is Water.Still || right is Water.Still)) {
                     changes[x to y] = Water.Still
-                    continue
+//                    continue
                 }
 
 
-                // remove down
-                if (c is Water.Down && !(above is Water || left is Water || right is Water)) {
-                    changes[x to y] = None
-                    continue
-                }
+//                // remove down
+//                if (c is Water.Down && !(above is Water || left is Water || right is Water)) {
+//                    changes[x to y] = None
+//                    continue
+//                }
             }
 
             for ((pos, cell) in changes) {

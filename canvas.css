@@ -26,3 +26,17 @@ button {
     width: 2em;
     background: transparent;
 }
+
+#cell-types {
+    background-color: #CCCCCC;
+}
+.cell-type {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 1px solid transparent;;
+}
+
+.cell-type[data-selected="1"] {
+    border: 2px solid black;
+}

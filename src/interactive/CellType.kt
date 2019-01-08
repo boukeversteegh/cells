@@ -3,6 +3,7 @@ package interactive
 typealias Color = String
 
 abstract class CellType {
+    @JsName("getColor")
     abstract fun getColor(x: Int, y: Int): Color
 }
 
