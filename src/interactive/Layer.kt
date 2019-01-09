@@ -2,6 +2,7 @@ package interactive
 
 class Layer(private val w: Int, private val h: Int) {
     val cellTypes = mutableListOf<CellType>()
+    val rules = mutableListOf<Rule>()
     private val cells = Array(h) { Array<CellType>(w) { None } }
 
     @JsName("get")
@@ -44,71 +45,75 @@ class Layer(private val w: Int, private val h: Int) {
         val changes = mutableMapOf<Position, CellType>()
         for ((x, y) in lastChangedPositions) {
             val c = get(x, y)
-            val left = get(x - 1, y)
-            val right = get(x + 1, y)
-            val below = get(x, y + 1)
-            val above = get(x, y - 1)
+            val p = x to y
 
-            // generate down
-            if (above is Water.Source && c is None) {
-                changes[x to y] = Water.Down
-//                    continue
+            val neighborPositions: List<Position> = listOf(p, p.left, p.right, p.below, p.above)
+            val neighbors = neighborPositions.map { it -> it to get(it.first, it.second) }.toMap()
+
+            for (rule in rules) {
+                changes.putAll(rule.evaluate(p, neighbors))
             }
 
             // generate down
-            if (c is None && (left is Water.Spread || right is Water.Spread) && below !== Dirt) {
-                changes[x to y] = Water.Down
+            if (neighbors[p.above] is Water.Source && c is None) {
+                changes[p] = Water.Down
 //                    continue
             }
+
+//            // generate down
+//            if (c is None && (p.left is Water.Spread || right is Water.Spread) && below !== Dirt) {
+//                changes[x to y] = Water.Down
+////                    continue
+//            }
 
             // propagate down
-            if (above is Water.Down && c is None) {
-                changes[x to y] = Water.Down
+            if (neighbors[p.above] is Water.Down && c is None) {
+                changes[p] = Water.Down
 //                    continue
             }
 
 
             // generate spread
-            if (c is Water.Down && below is Dirt) {
-                changes[x to y] = Water.Spread
+            if (c is Water.Down && neighbors[p.below] is Dirt) {
+                changes[p] = Water.Spread
 //                    continue
             }
 
             // generate spread
-            if (c is Water.Down && below is Water.Still) {
-                changes[x to y] = Water.Spread
+            if (c is Water.Down && neighbors[p.below] is Water.Still) {
+                changes[p] = Water.Spread
 //                    continue
             }
 
             // propagate spread
-            if (c is None && (left is Water.Spread || right is Water.Spread) && (below is Dirt || below is Water.Still)) {
-                changes[x to y] = Water.Spread
+            if (c is None && (neighbors[p.left] is Water.Spread || neighbors[p.right] is Water.Spread) && (neighbors[p.below] is Dirt || neighbors[p.below] is Water.Still)) {
+                changes[p] = Water.Spread
 //                    continue
             }
 
 
             // generate bounce
-            if (c is Water.Spread && (left is Dirt || right is Dirt)) {
-                changes[x to y] = Water.Bounce
+            if (c is Water.Spread && (neighbors[p.left] is Dirt || neighbors[p.right] is Dirt)) {
+                changes[p] = Water.Bounce
 //                    continue
             }
 
             // propagate bounce
-            if (c is Water.Spread && (left is Water.Bounce || right is Water.Bounce)) {
-                changes[x to y] = Water.Bounce
+            if (c is Water.Spread && (neighbors[p.left] is Water.Bounce || neighbors[p.right] is Water.Bounce)) {
+                changes[p] = Water.Bounce
 //                    continue
             }
 
 
             // generate still
-            if (c is Water.Spread && ((left is Water.Bounce || left is Dirt) && (right is Water.Bounce || right is Dirt))) {
-                changes[x to y] = Water.Still
+            if (c is Water.Spread && ((neighbors[p.left] is Water.Bounce || neighbors[p.left] is Dirt) && (neighbors[p.right] is Water.Bounce || neighbors[p.right] is Dirt))) {
+                changes[p] = Water.Still
 //                    continue
             }
 
             // propagate still
-            if (c is Water.Bounce && (left is Water.Still || right is Water.Still)) {
-                changes[x to y] = Water.Still
+            if (c is Water.Bounce && (neighbors[p.left] is Water.Still || neighbors[p.right] is Water.Still)) {
+                changes[p] = Water.Still
 //                    continue
             }
 
@@ -126,3 +131,21 @@ class Layer(private val w: Int, private val h: Int) {
         }
     }
 }
+
+val Pair<Int, Int>.x: Int
+    get() = this.first
+
+val Pair<Int, Int>.y: Int
+    get() = this.second
+
+val Pair<Int, Int>.left: Position
+    get() = x - 1 to y
+
+val Pair<Int, Int>.above: Position
+    get() = x to y - 1
+
+val Pair<Int, Int>.below: Position
+    get() = x to y + 1
+
+val Pair<Int, Int>.right: Position
+    get() = x + 1 to y

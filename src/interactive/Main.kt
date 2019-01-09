@@ -6,6 +6,7 @@ fun init(): Automaton {
 
     val l1 = automaton.addLayer()
 
+    l1.rules.add(WaterDownRule())
     l1.cellTypes.add(Dirt)
     l1.cellTypes.add(None)
     l1.cellTypes.add(Water.Source)
