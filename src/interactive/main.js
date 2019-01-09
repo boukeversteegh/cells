@@ -47,6 +47,21 @@ class Mouse {
             }
         });
     }
+
+    onClick(callback) {
+        let mouse = this;
+        this.canvas.addEventListener('click', function() {
+            callback.apply(mouse);
+        })
+    }
+
+
+    onMouseDown(callback) {
+        let mouse = this;
+        this.canvas.addEventListener('mousedown', function() {
+            callback.apply(mouse);
+        })
+    }
 }
 
 class UI {
@@ -65,6 +80,10 @@ class UI {
 
         this.mouse = new Mouse(this.canvas);
         this.mouse.onDrag(function () {
+            self.paint(this.x, this.y);
+        });
+
+        this.mouse.onMouseDown(function () {
             self.paint(this.x, this.y);
         });
 
