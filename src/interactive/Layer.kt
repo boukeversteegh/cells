@@ -20,6 +20,14 @@ class Layer(private val w: Int, private val h: Int) {
         }
     }
 
+    private fun get(position: Position): CellType {
+        return this.get(position.x, position.y)
+    }
+
+    private fun get(positions: List<Position>): Map<Position, CellType> {
+        return positions.map { it -> it to get(it) }.toMap()
+    }
+
     @JsName("setByIndex")
     fun set(x: Int, y: Int, cellTypeIndex: Int) {
         if (y in 0 until h && x in 0 until w) {
@@ -47,22 +55,29 @@ class Layer(private val w: Int, private val h: Int) {
             val c = get(x, y)
             val p = x to y
 
-            val neighborPositions: List<Position> = listOf(p, p.left, p.right, p.below, p.above)
-            val neighbors = neighborPositions.map { it -> it to get(it.first, it.second) }.toMap()
+            val neighborPositions: List<Position> = listOf(
+                p,
+                p.left,
+                p.right,
+                p.below,
+                p.above,
+                (x - 1 to y - 1),
+                (x - 1 to y + 1),
+                (x + 1 to y - 1),
+                (x + 1 to y + 1)
+//                p.left + p.below,
+//                p.right + p.above,
+//                p.right + p.below
+            )
+            val neighbors = get(neighborPositions)
 
             for (rule in rules) {
                 changes.putAll(rule.evaluate(p, neighbors))
             }
 
             // generate down
-            if (neighbors[p.above] is Water.Source && c is None) {
-                changes[p] = Water.Down
-//                    continue
-            }
-
-//            // generate down
-//            if (c is None && (p.left is Water.Spread || right is Water.Spread) && below !== Dirt) {
-//                changes[x to y] = Water.Down
+//            if (neighbors[p.above] is Water.Source && c is None) {
+//                changes[p] = Water.Down
 ////                    continue
 //            }
 
@@ -72,12 +87,6 @@ class Layer(private val w: Int, private val h: Int) {
 //                    continue
             }
 
-
-            // generate spread
-            if (c is Water.Down && neighbors[p.below] is Dirt) {
-                changes[p] = Water.Spread
-//                    continue
-            }
 
             // generate spread
             if (c is Water.Down && neighbors[p.below] is Water.Still) {

@@ -20,6 +20,12 @@ object Void : CellType() {
     }
 }
 
+object Any: CellType() {
+    override fun getColor(x: Int, y: Int): Color {
+        return "#77499C"
+    }
+}
+
 class CustomCellType(private val color: Color) : CellType() {
     override fun getColor(x: Int, y: Int): Color {
         return color
@@ -28,6 +34,11 @@ class CustomCellType(private val color: Color) : CellType() {
 
 object Dirt : CellType() {
     override fun getColor(x: Int, y: Int): Color = "#4d3d38"
+}
+
+object Grass : CellType() {
+    override fun getColor(x: Int, y: Int): Color = "#3B4D28"
+
 }
 
 abstract class Water : CellType() {
