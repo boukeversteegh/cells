@@ -37,7 +37,10 @@ object Dirt : CellType() {
 
 object Grass : CellType() {
     override fun getColor(x: Int, y: Int): Color = "#3B4D28"
+}
 
+object Gray : CellType() {
+    override fun getColor(x: Int, y: Int): Color = "#CCCCCC"
 }
 
 abstract class Water : CellType() {

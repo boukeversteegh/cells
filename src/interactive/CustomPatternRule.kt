@@ -19,12 +19,20 @@ class CustomPatternRule(override val input: MutableMap<Position, CellType>, over
 
     @JsName("setInput")
     fun setInput(x: Int, y: Int, c: CellType) {
-        input[x to y] = c
+        if (c is Any) {
+            input.remove(x to y)
+        } else {
+            input[x to y] = c
+        }
     }
 
     @JsName("setOutput")
     fun setOutput(x: Int, y: Int, c: CellType) {
-        output[x to y] = c
+        if (c is Any) {
+            output.remove(x to y)
+        } else {
+            output[x to y] = c
+        }
     }
 }
 

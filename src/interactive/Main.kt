@@ -74,6 +74,7 @@ fun init(): Automaton {
     l1.cellTypes.add(Water.Still)
     l1.cellTypes.add(Water.Bounce)
     l1.cellTypes.add(Grass)
+    l1.cellTypes.add(Gray)
     l1.cellTypes.add(Any)
     l1.set(1,1, Water.Source)
 
