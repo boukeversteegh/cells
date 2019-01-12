@@ -54,18 +54,26 @@ class Rule extends React.Component {
                 this.state.onClick(rule)
             }}>
                 <div className="pattern input">{
-                    neighbors.map((position, index) => {
-                        let cellType = rule.getInputCellType(position.x, position.y);
-                        return <CellType key={index} cellType={cellType} onClick={() => {
-                            self.clickInputCell(position.x, position.y)
+                    neighbors.map((pos, index) => {
+                        let cellType = rule.getInputCellType(pos.x, pos.y);
+                        return <CellType
+                            key={index}
+                            cellType={cellType}
+                            selected={pos.x === 0 && pos.y === 0}
+                            onClick={() => {
+                                self.clickInputCell(pos.x, pos.y)
                         }}/>
                     })
                 }</div>
                 <div className="pattern output">{
-                    neighbors.map((position, index) => {
-                        let cellType = rule.getOutputCellType(position.x, position.y);
-                        return <CellType key={index} cellType={cellType} onClick={() => {
-                            self.clickOutputCell(position.x, position.y)
+                    neighbors.map((pos, index) => {
+                        let cellType = rule.getOutputCellType(pos.x, pos.y);
+                        return <CellType
+                            key={index}
+                            cellType={cellType}
+                            selected={pos.x === 0 && pos.y === 0}
+                            onClick={() => {
+                                self.clickOutputCell(pos.x, pos.y)
                         }}/>
                     })
                 }</div>
