@@ -19,12 +19,19 @@ canvas {
     /* IE                            */
     background-color: #EEEEEE;
 }
+body {
+    background: #999999;
+}
+#display {
+    float: left;
+    clear: both;
+}
 
 button {
     font-size: 1.5em;
     line-height: 2em;
     width: 2em;
-    background: transparent;
+    background: #DDD;
 }
 
 #cell-types {
@@ -39,4 +46,46 @@ button {
 
 .cell-type[data-selected="1"] {
     border: 2px solid black;
+}
+
+#rules {
+    clear: both;
+}
+
+
+.rule {
+    background: grey;
+    float: left;
+    min-height: 96px;
+    width: 96px;
+    border: 4px solid black;
+    margin: 1px;
+}
+
+
+.rule .pattern {
+    float: left;
+    height: 96px;
+    width: 96px;
+}
+.rule .pattern.output {
+    border-top: 2px solid black;
+}
+
+.rule .pattern .cell {
+    width: 30px;
+    height: 30px;
+    /*background: red;*/
+    margin: 1px;
+    font-size: 16px;
+    line-height: 16px;
+    float: left;
+}
+.rule .pattern .cell[data-any="1"] {
+    background-image: linear-gradient(135deg, #aaaaaa 25%, #999999 25%, #999999 50%, #aaaaaa 50%, #aaaaaa 75%, #999999 75%, #999999 100%);
+    background-size: 11.31px 11.31px;
+}
+
+.rule[data-editable="1"] .input .cell {
+    cursor: pointer;
 }

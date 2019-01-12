@@ -17,20 +17,55 @@ fun init(): Automaton {
             (0 to 0) to Water.Down
         )
     ))
-
     l1.rules.add(CustomPatternRule(
-        listOf(
-            listOf(Water.Down, None, Any),
-            listOf(Water.Down, None, Any),
-            listOf(Water.Down, None, Any)
+        mapOf(
+            (0 to 0) to Water.Still,
+            (0 to 1) to None
         ),
-        listOf(
-            listOf(Any, Any, Grass),
-            listOf(Any, Any, Any),
-            listOf(Any, Grass, Any)
-        ),
-        1 to 1)
-    )
+        mapOf(
+            (0 to 0) to Water.Down
+        )
+    ))
+
+//    Remove falling water without source
+//    l1.rules.add(CustomPatternRule(
+//        mapOf(
+//            (0 to -1) to Dirt,
+//            (-1 to 0) to None,
+//            (1 to 0) to None,
+//            (0 to 0) to Water.Down
+//        ),
+//        mapOf(
+//            (0 to 0) to None
+//        )
+//    ))
+//
+//
+//    l1.rules.add(CustomPatternRule(
+//        mapOf(
+//            (0 to -1) to None,
+//            (-1 to 0) to None,
+//            (1 to 0) to None,
+//            (0 to 0) to Water.Down
+//        ),
+//        mapOf(
+//            (0 to 0) to None
+//        )
+//    ))
+
+//    l1.rules.add(CustomPatternRule(
+//        listOf(
+//            listOf(Water.Down, None, Any),
+//            listOf(Water.Down, None, Any),
+//            listOf(Water.Down, None, Any)
+//        ),
+//        listOf(
+//            listOf(Any, Any, Grass),
+//            listOf(Any, Any, Any),
+//            listOf(Any, Grass, Any)
+//        ),
+//        1 to 1)
+//    )
     l1.cellTypes.add(Dirt)
     l1.cellTypes.add(None)
     l1.cellTypes.add(Water.Source)

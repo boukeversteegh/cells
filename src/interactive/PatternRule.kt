@@ -9,6 +9,27 @@ abstract class PatternRule : Rule() {
 
         return if (patternMatches) (position + output) else emptyMap()
     }
+
+    // @todo remember center?
+    @JsName("getInput")
+    fun getInput() {
+        val array = Array(3) { Array<CellType>(3) { Any } }
+        input.forEach { it ->
+            val position = it.key
+            val cellType = it.value
+            array[position.y + 1][position.x + 1] = cellType
+        }
+    }
+
+    @JsName("getInputCellType")
+    fun getInput(x: Int, y: Int): CellType {
+        return input.getOrElse(x to y) { Any }
+    }
+
+    @JsName("getOutputCellType")
+    fun getOutput(x: Int, y: Int): CellType {
+        return output.getOrElse(x to y) { Any }
+    }
 }
 
 private operator fun <V> Position.plus(map: Map<Position, V>): Map<Position, V> {

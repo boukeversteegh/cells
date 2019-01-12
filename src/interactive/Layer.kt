@@ -49,6 +49,16 @@ class Layer(private val w: Int, private val h: Int) {
         return cellTypes.toTypedArray()
     }
 
+    @JsName("getRules")
+    fun getRules(): Array<Rule> {
+        return rules.toTypedArray()
+    }
+
+    @JsName("addRule")
+    fun addRule() {
+        rules.add(CustomPatternRule(emptyMap(), emptyMap()))
+    }
+
     fun iterate(lastChangedPositions: List<Position>) {
         val changes = mutableMapOf<Position, CellType>()
         for ((x, y) in lastChangedPositions) {

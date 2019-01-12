@@ -11,7 +11,6 @@ object None : CellType() {
     override fun getColor(x: Int, y: Int): Color {
         return "#000000"
     }
-
 }
 
 object Void : CellType() {
@@ -22,7 +21,7 @@ object Void : CellType() {
 
 object Any: CellType() {
     override fun getColor(x: Int, y: Int): Color {
-        return "#77499C"
+        return "#9C0096"
     }
 }
 

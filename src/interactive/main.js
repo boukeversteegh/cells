@@ -121,7 +121,9 @@ class UI {
 
     initReact() {
         const e = React.createElement;
-        const domContainer = document.querySelector('#cell-types');
-        ReactDOM.render(e(CellTypes, {automaton: this.automaton, ui: this}), domContainer);
+        const cellTypes = document.querySelector('#cell-types');
+        const rules = document.querySelector('#rules');
+        ReactDOM.render(e(CellTypes, {automaton: this.automaton, ui: this}), cellTypes);
+        ReactDOM.render(e(Rules, {automaton: this.automaton, ui: this, selectedCellType: this.selectedCellType,}), rules);
     }
 }
