@@ -6,32 +6,43 @@ class CellTypes extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            ui: props.ui,
-            automaton: props.automaton,
-            selectedCellType: props.automaton.getLayers()[0].getCellTypes()[0],
+            selectedCellType: props.selectedCellType,
+            cellTypes: props.cellTypes,
+            // ui: props.ui,
+            // automaton: props.automaton,
+            // selectedCellType: props.automaton.getLayers()[0].getCellTypes()[0],
         }
     }
 
     selectCellType(cellType) {
         this.setState({selectedCellType: cellType});
-        this.state.ui.selectedCellType = cellType;
+        this.props.onSelect(cellType);
+        // this.state.ui.selectedCellType = cellType;
     }
 
     render() {
         let self = this;
-        return (<div>
+        return (<div id="cell-types">
             {
-                this.state.automaton.getLayers()[0].getCellTypes()
+                this.state.cellTypes
                     .map(function (cellType, index) {
-                        return <span
+                        return <CellType
                             key={index}
-                            className="cell-type"
-                            data-selected={(self.state.selectedCellType == cellType) ? '1' : '0'}
-                            style={{backgroundColor: cellType.getColor(0, 0)}}
+                            cellType={cellType}
                             onClick={() => {
                                 self.selectCellType(cellType)
                             }}
-                        />
+                            selected={self.state.selectedCellType === cellType}
+                        />;
+                        // return <span
+                        //     key={index}
+                        //     className="cell-type"
+                        //     data-selected={(self.state.selectedCellType === cellType) ? '1' : '0'}
+                        //     style={{backgroundColor: cellType.getColor(0, 0)}}
+                        //     onClick={() => {
+                        //         self.selectCellType(cellType)
+                        //     }}
+                        // />
                     })
             }
         </div>)

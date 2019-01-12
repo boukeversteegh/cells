@@ -3,7 +3,11 @@
 class CellType extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {cellType: props.cellType, onClick: props.onClick}
+        this.state = {
+            cellType: props.cellType,
+            onClick: props.onClick,
+            selected: props.selected,
+        }
     }
 
     render() {
@@ -18,6 +22,7 @@ class CellType extends React.Component {
                     data-any={isAny | 0}
                     style={cellStyle}
                     onClick={self.props.onClick}
+                    data-selected={self.props.selected | 0}
         >{this.state.version}
         </div>
     }

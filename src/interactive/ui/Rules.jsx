@@ -4,27 +4,22 @@ class Rules extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            automaton: props.automaton,
-            layer: props.automaton.getLayers()[0],
+            rules: props.rules,
             selectedCellType: props.selectedCellType,
         }
     }
 
     render() {
-        let rules = this.state.layer.getRules();
+        let rules = this.props.rules;
         let self = this;
-        return (<div>{
+        return (<div id="rules">{
             rules.map(function (rule, index) {
                 return <Rule key={index} rule={rule} selectedCellType={self.props.selectedCellType} onClick={() => {
                     self.selectRule(rule)
                 }}/>;
             })
         }
-            <button onClick={() => {
-                self.addRule()
-            }}>➕
-            </button>
-            {self.state.selectedCellType.constructor.name}
+            <button onClick={this.props.onAddRule}>➕</button>
         </div>)
     }
 
@@ -32,8 +27,8 @@ class Rules extends React.Component {
 
     }
 
-    addRule() {
-        this.state.layer.addRule();
-        this.forceUpdate();
-    }
+    // addRule() {
+    // this.state.layer.addRule();
+    // this.forceUpdate();
+    // }
 }
