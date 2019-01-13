@@ -1,6 +1,6 @@
 package interactive
 
-class WaterDownRule : Rule() {
+class WaterOverflowRule : Rule() {
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         val c = neighbors[position]
 

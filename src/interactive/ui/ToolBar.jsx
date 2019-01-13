@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 class ToolBar extends React.Component {
     constructor(props) {
@@ -20,15 +20,23 @@ class ToolBar extends React.Component {
                     this.setState({selectedCellType: cellType});
                     this.props.onSelectCellType(cellType);
                 }}
+                onAdd={() => {
+                    this.props.onAddCellType();
+                    this.setState({
+                        cellTypes: this.state.layer.getCellTypes(),
+                    });
+
+                }}
             />
-            <Rules rules={this.state.rules} selectedCellType={this.state.selectedCellType} onAddRule={() => {
-                console.log(this);
-                this.state.layer.addRule();
-                this.setState({
-                    rules: this.state.layer.getRules()
-                });
-                this.forceUpdate();
-            }}/>
+            <Rules rules={this.state.rules}
+                   selectedCellType={this.state.selectedCellType}
+                   onAddRule={() => {
+                       this.state.layer.addRule();
+                       this.setState({
+                           rules: this.state.layer.getRules()
+                       });
+                    }}
+            />
         </div>)
     }
 }

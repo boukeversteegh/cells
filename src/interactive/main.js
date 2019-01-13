@@ -131,6 +131,9 @@ class UI {
             onSelectCellType: (cellType) => {
                 this.selectedCellType = cellType;
             },
+            onAddCellType: () => {
+                layer.addCellType();
+            }
         }), toolBar);
     }
 }

@@ -1,7 +1,5 @@
 'use strict';
 
-const e = React.createElement;
-
 class CellTypes extends React.Component {
     constructor(props) {
         super(props);
@@ -18,9 +16,10 @@ class CellTypes extends React.Component {
 
     render() {
         let self = this;
+        let isCustom = (this.props.selectedCellType instanceof cells.interactive.CustomCellType);
         return (<div id="cell-types">
             {
-                this.state.cellTypes
+                this.props.cellTypes
                     .map(function (cellType, index) {
                         return <CellType
                             key={index}
@@ -28,10 +27,32 @@ class CellTypes extends React.Component {
                             onClick={() => {
                                 self.selectCellType(cellType)
                             }}
+
                             selected={self.state.selectedCellType === cellType}
                         />;
                     })
             }
+            <div
+                className="cell"
+                onClick={(event) => {
+                    if (isCustom) {
+                        let newColor = prompt("New color", self.state.selectedCellType.color);
+                        if (newColor) {
+                            self.state.selectedCellType.color = newColor;
+                            this.forceUpdate();
+                        }
+                    }
+                }}
+            >🎨</div>
+            <div
+                className="cell"
+                onClick={() => {
+                    this.props.onAdd();
+                    this.forceUpdate();
+                }}
+            >
+                +
+            </div>
         </div>)
     }
 }

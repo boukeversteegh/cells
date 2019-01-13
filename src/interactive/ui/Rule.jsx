@@ -59,7 +59,7 @@ class Rule extends React.Component {
                         return <CellType
                             key={index}
                             cellType={cellType}
-                            selected={pos.x === 0 && pos.y === 0}
+                            // selected={pos.x === 0 && pos.y === 0}
                             onClick={() => {
                                 self.clickInputCell(pos.x, pos.y)
                         }}/>
@@ -67,14 +67,17 @@ class Rule extends React.Component {
                 }</div>
                 <div className="pattern output">{
                     neighbors.map((pos, index) => {
-                        let cellType = rule.getOutputCellType(pos.x, pos.y);
+                        let outputCellType = rule.getOutputCellType(pos.x, pos.y);
+                        let inputCellType = rule.getInputCellType(pos.x, pos.y);
+
+                        let cellType = (outputCellType === cells.interactive.Any ? inputCellType : outputCellType);
                         return <CellType
                             key={index}
                             cellType={cellType}
-                            selected={pos.x === 0 && pos.y === 0}
+                            // selected={pos.x === 0 && pos.y === 0}
                             onClick={() => {
                                 self.clickOutputCell(pos.x, pos.y)
-                        }}/>
+                            }}/>
                     })
                 }</div>
             </div>

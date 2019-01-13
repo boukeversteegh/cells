@@ -15,7 +15,7 @@ class Layer(private val w: Int, private val h: Int) {
 
     @JsName("set")
     fun set(x: Int, y: Int, cellType: CellType) {
-        if (y in 0 until h && x in 0 until w) {
+        if (y in 0 until h && x in 0 until w && cellType !is Any) {
             cells[y][x] = cellType
         }
     }
@@ -30,9 +30,7 @@ class Layer(private val w: Int, private val h: Int) {
 
     @JsName("setByIndex")
     fun set(x: Int, y: Int, cellTypeIndex: Int) {
-        if (y in 0 until h && x in 0 until w) {
-            cells[y][x] = cellTypes[cellTypeIndex]
-        }
+        set(x, y, cellTypes[cellTypeIndex])
     }
 
     @JsName("clear")
@@ -59,6 +57,11 @@ class Layer(private val w: Int, private val h: Int) {
         rules.add(CustomPatternRule(emptyMap(), emptyMap()))
     }
 
+    @JsName("addCellType")
+    fun addCellType(color: String = "#FF00FF") {
+        cellTypes.add(CustomCellType(color))
+    }
+
     fun iterate(lastChangedPositions: List<Position>) {
         val changes = mutableMapOf<Position, CellType>()
         for ((x, y) in lastChangedPositions) {
@@ -75,9 +78,6 @@ class Layer(private val w: Int, private val h: Int) {
                 (x - 1 to y + 1),
                 (x + 1 to y - 1),
                 (x + 1 to y + 1)
-//                p.left + p.below,
-//                p.right + p.above,
-//                p.right + p.below
             )
             val neighbors = get(neighborPositions)
 
@@ -85,63 +85,31 @@ class Layer(private val w: Int, private val h: Int) {
                 changes.putAll(rule.evaluate(p, neighbors))
             }
 
-            // generate down
-//            if (neighbors[p.above] is Water.Source && c is None) {
-//                changes[p] = Water.Down
-////                    continue
-//            }
-
-            // propagate down
-            if (neighbors[p.above] is Water.Down && c is None) {
-                changes[p] = Water.Down
-//                    continue
-            }
-
-
-            // generate spread
-            if (c is Water.Down && neighbors[p.below] is Water.Still) {
-                changes[p] = Water.Spread
-//                    continue
-            }
-
             // propagate spread
             if (c is None && (neighbors[p.left] is Water.Spread || neighbors[p.right] is Water.Spread) && (neighbors[p.below] is Dirt || neighbors[p.below] is Water.Still)) {
                 changes[p] = Water.Spread
-//                    continue
             }
-
 
             // generate bounce
             if (c is Water.Spread && (neighbors[p.left] is Dirt || neighbors[p.right] is Dirt)) {
                 changes[p] = Water.Bounce
-//                    continue
             }
 
             // propagate bounce
             if (c is Water.Spread && (neighbors[p.left] is Water.Bounce || neighbors[p.right] is Water.Bounce)) {
                 changes[p] = Water.Bounce
-//                    continue
             }
 
 
             // generate still
             if (c is Water.Spread && ((neighbors[p.left] is Water.Bounce || neighbors[p.left] is Dirt) && (neighbors[p.right] is Water.Bounce || neighbors[p.right] is Dirt))) {
                 changes[p] = Water.Still
-//                    continue
             }
 
             // propagate still
             if (c is Water.Bounce && (neighbors[p.left] is Water.Still || neighbors[p.right] is Water.Still)) {
                 changes[p] = Water.Still
-//                    continue
             }
-
-
-//                // remove down
-//                if (c is Water.Down && !(above is Water || left is Water || right is Water)) {
-//                    changes[x to y] = None
-//                    continue
-//                }
         }
 
         for ((pos, cell) in changes) {

@@ -25,7 +25,7 @@ object Any: CellType() {
     }
 }
 
-class CustomCellType(private val color: Color) : CellType() {
+class CustomCellType(var color: Color) : CellType() {
     override fun getColor(x: Int, y: Int): Color {
         return color
     }
@@ -33,6 +33,12 @@ class CustomCellType(private val color: Color) : CellType() {
 
 object Dirt : CellType() {
     override fun getColor(x: Int, y: Int): Color = "#4d3d38"
+}
+
+object Sand : CellType() {
+    override fun getColor(x: Int, y: Int): Color {
+        return listOf("#c3af6d", "#c3a96e", "#bbaa63", "#b8af81").random()
+    }
 }
 
 object Grass : CellType() {

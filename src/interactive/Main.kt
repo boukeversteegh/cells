@@ -4,68 +4,37 @@ package interactive
 fun init(): Automaton {
     val automaton = Automaton(64, 48)
 
+    val above = 0 to -1
+    val below = 0 to 1
+    val center = 0 to 0
+
     val l1 = automaton.addLayer()
+    l1.rules.add(WaterOverflowRule())
 
-    l1.rules.add(WaterDownRule())
-    l1.rules.add(WaterGenerateSpreadOnDirtRule())
+    // generate spread on dirt
     l1.rules.add(CustomPatternRule(
-        mapOf(
-            (0 to -1) to Water.Source,
-            (0 to 0) to None
-        ),
-        mapOf(
-            (0 to 0) to Water.Down
-        )
-    ))
-    l1.rules.add(CustomPatternRule(
-        mapOf(
-            (0 to 0) to Water.Still,
-            (0 to 1) to None
-        ),
-        mapOf(
-            (0 to 0) to Water.Down
-        )
+        mapOf(center to Water.Down, below to Dirt),
+        mapOf(center to Water.Spread)
     ))
 
-//    Remove falling water without source
-//    l1.rules.add(CustomPatternRule(
-//        mapOf(
-//            (0 to -1) to Dirt,
-//            (-1 to 0) to None,
-//            (1 to 0) to None,
-//            (0 to 0) to Water.Down
-//        ),
-//        mapOf(
-//            (0 to 0) to None
-//        )
-//    ))
-//
-//
-//    l1.rules.add(CustomPatternRule(
-//        mapOf(
-//            (0 to -1) to None,
-//            (-1 to 0) to None,
-//            (1 to 0) to None,
-//            (0 to 0) to Water.Down
-//        ),
-//        mapOf(
-//            (0 to 0) to None
-//        )
-//    ))
+    // generate down
+    l1.rules.add(CustomPatternRule(
+        mapOf(above to Water.Source, center to None),
+        mapOf(center to Water.Down))
+    )
 
-//    l1.rules.add(CustomPatternRule(
-//        listOf(
-//            listOf(Water.Down, None, Any),
-//            listOf(Water.Down, None, Any),
-//            listOf(Water.Down, None, Any)
-//        ),
-//        listOf(
-//            listOf(Any, Any, Grass),
-//            listOf(Any, Any, Any),
-//            listOf(Any, Grass, Any)
-//        ),
-//        1 to 1)
-//    )
+    // propagate down
+    l1.rules.add(CustomPatternRule(
+        mapOf(above to Water.Down, center to None),
+        mapOf(center to Water.Down))
+    )
+
+    // generate spread
+    l1.rules.add(CustomPatternRule(
+        mapOf(center to Water.Down, below to Water.Still),
+        mapOf(center to Water.Spread))
+    )
+
     l1.cellTypes.add(Dirt)
     l1.cellTypes.add(None)
     l1.cellTypes.add(Water.Source)
@@ -75,8 +44,15 @@ fun init(): Automaton {
     l1.cellTypes.add(Water.Bounce)
     l1.cellTypes.add(Grass)
     l1.cellTypes.add(Gray)
+    l1.cellTypes.add(Sand)
     l1.cellTypes.add(Any)
-    l1.set(1,1, Water.Source)
+    l1.set(10, 3, Water.Source)
+
+    for (x in 4 .. 20) {
+        l1.set(x, 20, Dirt)
+    }
+    l1.set(4, 19, Dirt)
+    l1.set(20, 19, Dirt)
 
     return automaton
 }
