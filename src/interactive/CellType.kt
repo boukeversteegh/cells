@@ -13,6 +13,13 @@ object None : CellType() {
     }
 }
 
+
+object Alive : CellType() {
+    override fun getColor(x: Int, y: Int): Color {
+        return "#FFFFFF"
+    }
+}
+
 object Void : CellType() {
     override fun getColor(x: Int, y: Int): Color {
         return "#FFFF00"

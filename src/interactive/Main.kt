@@ -10,6 +10,7 @@ fun init(): Automaton {
 
     val l1 = automaton.addLayer()
     l1.rules.add(WaterOverflowRule())
+    // l1.rules.add(GameOfLife())
 
     // generate spread on dirt
     l1.rules.add(CustomPatternRule(
@@ -45,14 +46,23 @@ fun init(): Automaton {
     l1.cellTypes.add(Grass)
     l1.cellTypes.add(Gray)
     l1.cellTypes.add(Sand)
+    l1.cellTypes.add(Alive)
     l1.cellTypes.add(Any)
-    l1.set(10, 3, Water.Source)
 
-    for (x in 4 .. 20) {
-        l1.set(x, 20, Dirt)
+    // water world
+    fun waterWorld() {
+        l1.set(10, 3, Water.Source)
+
+        for (x in 4..20) {
+            l1.set(x, 20, Dirt)
+        }
+        l1.set(4, 19, Dirt)
+        l1.set(20, 19, Dirt)
+
+        l1.rules.add(GameOfLife(Dirt))
     }
-    l1.set(4, 19, Dirt)
-    l1.set(20, 19, Dirt)
+
+    waterWorld()
 
     return automaton
 }
