@@ -58,8 +58,6 @@ fun init(): Automaton {
         }
         l1.set(4, 19, Dirt)
         l1.set(20, 19, Dirt)
-
-        l1.rules.add(GameOfLife(Dirt))
     }
 
     waterWorld()
