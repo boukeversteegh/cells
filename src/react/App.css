@@ -1,0 +1,16 @@
+body {
+    background: #999999;
+}
+
+
+button {
+    font-size: 1.5em;
+    line-height: 2em;
+    background: #DDD;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}

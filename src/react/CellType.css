@@ -1,0 +1,25 @@
+.cell {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    float: left;
+    border: 1px solid #888;
+    text-align: center;
+}
+
+.cell[data-selected="1"] {
+    border: 1px solid magenta;
+    z-index: 1;
+    position: relative;
+}
+
+
+.cell[data-any="1"] {
+    background-image: linear-gradient(135deg, #aaaaaa 25%, #999999 25%, #999999 50%, #aaaaaa 50%, #aaaaaa 75%, #999999 75%, #999999 100%);
+    background-size: 11.31px 11.31px;
+}
+
+.rule[data-editable="1"] .cell {
+    cursor: pointer;
+}
