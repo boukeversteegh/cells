@@ -41,6 +41,12 @@ class ToolBar extends Component {
         }
     }
 
+    clear() {
+        this.state.layer.clear();
+        this.state.layer.rules.clear();
+        this.reloadRules()
+    }
+
     render() {
         return (<div>
             <button onClick={() => {
@@ -50,6 +56,10 @@ class ToolBar extends Component {
             <button onClick={() => {
                 this.load()
             }}>Load
+            </button>
+            <button onClick={() => {
+                this.clear()
+            }}>Clear
             </button>
             <CellTypes
                 cellTypes={this.state.cellTypes}
