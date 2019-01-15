@@ -49,7 +49,6 @@ fun init(): Automaton {
     l1.cellTypes.add(Alive)
     l1.cellTypes.add(Any)
 
-    // water world
     fun waterWorld() {
         l1.set(10, 3, Water.Source)
 
