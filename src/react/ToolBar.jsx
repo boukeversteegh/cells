@@ -20,6 +20,12 @@ class ToolBar extends Component {
         });
     }
 
+    reloadRules() {
+        this.setState({
+            rules: this.state.layer.getRules()
+        });
+    }
+
     save() {
         let layerState = this.state.mapper.mapLayer(this.state.layer);
         prompt("Copy this", JSON.stringify(layerState));
@@ -31,6 +37,7 @@ class ToolBar extends Component {
         if (layerState) {
             this.state.mapper.loadLayer(this.state.layer, JSON.parse(layerState));
             this.reloadCellTypes();
+            this.reloadRules();
         }
     }
 
@@ -61,9 +68,7 @@ class ToolBar extends Component {
                    selectedCellType={this.state.selectedCellType}
                    onAddRule={() => {
                        this.state.layer.addRule();
-                       this.setState({
-                           rules: this.state.layer.getRules()
-                       });
+                       this.reloadRules();
                    }}
             />
         </div>)
