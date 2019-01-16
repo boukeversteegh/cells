@@ -38,7 +38,6 @@ class JsonMapper {
 
         val rulesState = layerState["rules"].unsafeCast<Array<Json>>()
 
-        layer.rules.clear()
 
         fun mapPattern(patternState: Array<Json>): Map<Position, CellType> {
             return patternState.map {
@@ -46,8 +45,9 @@ class JsonMapper {
             }.toMap()
         }
 
+        layer.rules.clear()
         for (ruleState in rulesState) {
-            val inputState: Array<Json> = ruleState["input"].unsafeCast<Array<Json>>()
+            val inputState = ruleState["input"].unsafeCast<Array<Json>>()
             val outputState = ruleState["output"].unsafeCast<Array<Json>>()
 
             val input = mapPattern(inputState)
@@ -55,6 +55,7 @@ class JsonMapper {
 
             layer.rules.add(CustomPatternRule(input, output))
         }
+        console.log(layer.rules);
     }
 
     private fun map(cellTypes: List<CellType>): Array<Json> {
@@ -90,9 +91,5 @@ class JsonMapper {
             "x" to position.x,
             "y" to position.y
         )
-    }
-
-    fun map(rule: Rule) {
-//        JSON.stringify(rule.)
     }
 }
