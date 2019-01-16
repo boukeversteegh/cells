@@ -4,9 +4,9 @@ import kotlin.js.*
 
 class JsonMapper {
     @JsName("mapLayer")
-    fun map(layer: Layer): Json {
+    fun toJson(layer: Layer): Json {
         return json(
-            "cellTypes" to map(layer.cellTypes),
+            "cellTypes" to toJson(layer.cellTypes),
             "rules" to layer
                 .rules
                 .filter { it is CustomPatternRule }
@@ -15,8 +15,8 @@ class JsonMapper {
                 }
                 .map {
                     json(
-                        "input" to map(it.input, layer.cellTypes),
-                        "output" to map(it.output, layer.cellTypes)
+                        "input" to toJson(it.input, layer.cellTypes),
+                        "output" to toJson(it.output, layer.cellTypes)
                     )
                 }
                 .toTypedArray()
@@ -24,7 +24,7 @@ class JsonMapper {
     }
 
     @JsName("loadLayer")
-    fun map(layer: Layer, layerState: Json) {
+    fun fromJson(layer: Layer, layerState: Json) {
         val cellTypesState = layerState["cellTypes"].unsafeCast<Array<Json>>()
 
         layer.cellTypes.clear()
@@ -58,13 +58,13 @@ class JsonMapper {
         console.log(layer.rules);
     }
 
-    private fun map(cellTypes: List<CellType>): Array<Json> {
+    private fun toJson(cellTypes: List<CellType>): Array<Json> {
         return cellTypes.map {
-            map(it)
+            toJson(it)
         }.toTypedArray()
     }
 
-    private fun map(cellType: CellType): Json {
+    private fun toJson(cellType: CellType): Json {
         return when (cellType) {
             is CustomCellType -> json("color" to cellType.color, "type" to "custom")
             is Any -> json("type" to "any")
@@ -72,21 +72,21 @@ class JsonMapper {
         }
     }
 
-    fun map(positions: Map<Position, CellType>, cellTypes: List<CellType>): Array<Json> {
+    fun toJson(positions: Map<Position, CellType>, cellTypes: List<CellType>): Array<Json> {
         return positions.map {
             json(
-                "position" to map(it.key),
-                "cellType" to map(it.value, cellTypes)
+                "position" to toJson(it.key),
+                "cellType" to toJson(it.value, cellTypes)
             )
         }.toTypedArray()
     }
 
-    private fun map(cellType: CellType, cellTypes: List<CellType>): Int {
+    private fun toJson(cellType: CellType, cellTypes: List<CellType>): Int {
         console.log(cellType, cellTypes, cellTypes.indexOf(cellType))
         return cellTypes.indexOf(cellType)
     }
 
-    fun map(position: Position): Json {
+    fun toJson(position: Position): Json {
         return json(
             "x" to position.x,
             "y" to position.y
