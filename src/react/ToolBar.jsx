@@ -38,6 +38,7 @@ class ToolBar extends Component {
             this.state.mapper.loadLayer(this.state.layer, JSON.parse(layerState));
             this.reloadCellTypes();
             this.reloadRules();
+            this.forceUpdate();
         }
     }
 

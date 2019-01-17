@@ -9,8 +9,16 @@ class CellTypes extends Component {
         super(props);
         this.state = {
             selectedCellType: props.selectedCellType,
-            cellTypes: props.cellTypes,
         }
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        if (props.cellTypes.indexOf(state.selectedCellType) === -1) {
+            return {
+                selectedCellType: props.cellTypes[0]
+            }
+        }
+        return null;
     }
 
     selectCellType(cellType) {

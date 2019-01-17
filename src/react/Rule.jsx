@@ -8,17 +8,18 @@ class Rule extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rule: props.rule,
-            isEditable: props.rule instanceof cells.interactive.CustomPatternRule,
-            onClick: props.onClick,
             selectedCellType: props.selectedCellType,
         }
     }
 
+    isEditable() {
+        return this.props.rule instanceof cells.interactive.CustomPatternRule;
+    }
+
     clickInputCell(x, y) {
         console.log(this);
-        if (this.state.isEditable) {
-            this.state.rule.setInput(x, y, this.props.selectedCellType);
+        if (this.isEditable()) {
+            this.props.rule.setInput(x, y, this.props.selectedCellType);
             this.forceUpdate();
         } else {
             console.log("Not editable")
@@ -26,8 +27,8 @@ class Rule extends Component {
     }
 
     clickOutputCell(x, y) {
-        if (this.state.isEditable) {
-            this.state.rule.setOutput(x, y, this.props.selectedCellType);
+        if (this.isEditable()) {
+            this.props.rule.setOutput(x, y, this.props.selectedCellType);
             this.forceUpdate();
         } else {
             console.log("Not editable")
@@ -35,11 +36,11 @@ class Rule extends Component {
     }
 
     render() {
+        const rule = this.props.rule;
         const self = this;
-        const editable = this.state.isEditable;
-        const isPattern = this.state.rule instanceof cells.interactive.PatternRule;
+        const editable = this.isEditable();
+        const isPattern = rule instanceof cells.interactive.PatternRule;
 
-        const rule = this.state.rule;
         const neighbors = [
             {x: -1, y: -1},
             {x: 0, y: -1},
@@ -55,7 +56,7 @@ class Rule extends Component {
         ];
         if (isPattern) {
             return <div className="rule" data-editable={editable | 0} onClick={() => {
-                this.state.onClick(rule)
+                this.props.onClick(rule)
             }}>
                 <div className="pattern input">{
                     neighbors.map((pos, index) => {
