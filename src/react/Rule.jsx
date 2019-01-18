@@ -74,11 +74,12 @@ class Rule extends Component {
                     neighbors.map((pos, index) => {
                         let outputCellType = rule.getOutputCellType(pos.x, pos.y);
                         let inputCellType = rule.getInputCellType(pos.x, pos.y);
-
-                        let cellType = (outputCellType === cells.interactive.Any ? inputCellType : outputCellType);
+                        let hasOutput = outputCellType !== cells.interactive.Any;
+                        let cellType = (hasOutput ? outputCellType : inputCellType);
                         return <CellType
                             key={index}
                             cellType={cellType}
+                            dim={!hasOutput}
                             // selected={pos.x === 0 && pos.y === 0}
                             onClick={() => {
                                 self.clickOutputCell(pos.x, pos.y)

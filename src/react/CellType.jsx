@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './CellType.css';
+
 const cells = window.cells;
 
 class CellType extends Component {
@@ -25,6 +26,7 @@ class CellType extends Component {
         }
         return <div className="cell"
                     data-any={isAny | 0}
+                    data-dim={self.props.dim | 0}
                     style={cellStyle}
                     onClick={self.props.onClick}
                     data-selected={self.props.selected | 0}
