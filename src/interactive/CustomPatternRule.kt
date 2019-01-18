@@ -1,19 +1,8 @@
 package interactive
 
-class CustomPatternRule(override val input: MutableMap<Position, CellType>, override val output: MutableMap<Position, CellType>) : PatternRule() {
-    constructor(
-        inPattern: List<List<CellType>>,
-        outPattern: List<List<CellType>>,
-        center: Position = 1 to 1
-    ) :
-        this(inPattern.toPositionMap(center).toMutableMap(), outPattern.toPositionMap(center).toMutableMap())
+typealias MutablePatternMap = MutableMap<Position, CellType>
 
-    constructor(
-        inPattern: List<List<CellType>>,
-        outCellType: CellType,
-        center: Position
-    ) :
-        this(inPattern.toPositionMap(center).toMutableMap(), mapOf((0 to 0) to outCellType).toMutableMap())
+class CustomPatternRule(override val input: MutablePatternMap, override val output: MutablePatternMap) : PatternRule() {
 
     constructor(input: Map<Position, CellType>, output: Map<Position, CellType>) : this(input.toMutableMap(), output.toMutableMap())
 
@@ -34,13 +23,4 @@ class CustomPatternRule(override val input: MutableMap<Position, CellType>, over
             output[x to y] = c
         }
     }
-}
-
-fun List<List<CellType>>.toPositionMap(center: Position): Map<Position, CellType> {
-    return withIndex().flatMap { it ->
-        val (y, row) = it
-        row.mapIndexed { x, c ->
-            (x - center.x to y - center.y) to c
-        }
-    }.toMap().filterValues { it -> it !is Any }
 }

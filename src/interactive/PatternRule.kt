@@ -1,8 +1,10 @@
 package interactive
 
+typealias PatternMap = Map<Position, CellType>
+
 abstract class PatternRule : Rule() {
-    abstract val input: Map<Position, CellType>
-    abstract val output: Map<Position, CellType>
+    abstract val input: PatternMap
+    abstract val output: PatternMap
 
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         val patternMatches = input.entries.all { neighbors[position + it.key] == it.value }

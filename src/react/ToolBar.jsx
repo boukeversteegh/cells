@@ -49,7 +49,7 @@ class ToolBar extends Component {
     }
 
     render() {
-        return (<div>
+        return (<div id="toolbar">
             <button onClick={() => {
                 this.save()
             }}>Save
