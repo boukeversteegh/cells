@@ -11,6 +11,7 @@ class ToolBar extends Component {
             cellTypes: props.cellTypes,
             selectedCellType: props.cellTypes[0],
             mapper: new window.cells.interactive.JsonMapper(),
+            layerState: '',
         };
     }
 
@@ -28,7 +29,16 @@ class ToolBar extends Component {
 
     save() {
         let layerState = this.state.mapper.mapLayer(this.state.layer);
-        prompt("Copy this", JSON.stringify(layerState));
+        this.setState({
+            layerState: JSON.stringify(layerState)
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.layerState != this.state.layerState) {
+            this.layerStateInput.select();
+            document.execCommand('copy');
+        }
     }
 
     load() {
@@ -62,6 +72,8 @@ class ToolBar extends Component {
                 this.clear()
             }}>Clear
             </button>
+            <input value={this.state.layerState} readOnly
+                   ref={(layerStateInput) => this.layerStateInput = layerStateInput}/>
             <CellTypes
                 cellTypes={this.state.cellTypes}
                 selectedCellType={this.state.selectedCellType}

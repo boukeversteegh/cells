@@ -36,7 +36,7 @@ class Screen extends Component {
         window.setInterval(function () {
             self.props.automaton.iterate();
             self.updateScreen();
-        }, 10);
+        }, 100);
     }
 
     updateScreen() {

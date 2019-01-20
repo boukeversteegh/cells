@@ -1,12 +1,25 @@
 package interactive
 
+import kotlin.js.Json
+import kotlin.js.json
+
 typealias Color = String
 
 abstract class CellType {
     @JsName("getColor")
     abstract fun getColor(x: Int, y: Int): Color
 
+    open fun serialize(): Json {
+        return json("type" to this::class.simpleName)
+    }
+
     fun serialize(cellTypes: List<CellType>): Int = cellTypes.indexOf(this)
+
+    companion object {
+        fun deserialize(cellTypeIndex: Int, cellTypes: List<CellType>): CellType {
+            return cellTypes[cellTypeIndex]
+        }
+    }
 }
 
 object None : CellType() {
@@ -35,6 +48,13 @@ object Any: CellType() {
 }
 
 class CustomCellType(var color: Color) : CellType() {
+    override fun serialize(): Json {
+        return json(
+            "type" to "custom",
+            "color" to color
+        )
+    }
+
     override fun getColor(x: Int, y: Int): Color {
         return color
     }

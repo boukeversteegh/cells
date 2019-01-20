@@ -98,12 +98,17 @@ class Layer(private val w: Int, private val h: Int) {
     @JsName("serialize")
     fun serialize(): Json {
         return json(
-            "cellTypes" to cellTypes.map { it.serialize(cellTypes) }.toTypedArray(),
+            "cellTypes" to cellTypes.map { it.serialize() }.toTypedArray(),
             "rules" to rules
                 .filter { it is SerializableRule }
                 .map { it as SerializableRule }
                 .map { it.serialize(cellTypes) }
-                .toTypedArray()
+                .toTypedArray(),
+            "cells" to cells.map { row ->
+                row.map {
+                    it.serialize(cellTypes)
+                }.toTypedArray()
+            }.toTypedArray()
         )
     }
 }

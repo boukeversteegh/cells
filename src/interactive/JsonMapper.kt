@@ -1,7 +1,6 @@
 package interactive
 
 import kotlin.js.Json
-import kotlin.js.json
 
 class JsonMapper {
     @JsName("mapLayer")
@@ -28,24 +27,23 @@ class JsonMapper {
                 "Sand" -> Sand
                 "Wire" -> ElectricityRule.Wire
                 "PoweredWire" -> ElectricityRule.PoweredWire
-
+                "ClearWire" -> ElectricityRule.ClearWire
+                "Dirt" -> Dirt
                 else -> CustomCellType(cellTypeState["color"].toString())
             }
             layer.cellTypes.add(cellType)
         }
 
-        val rulesState: Array<Json> = layerState["rules"].unsafeCast<Array<Json>>()
 
-
-        layer.clear()
+        // Load Rules
         layer.rules.clear()
 
+        val rulesState: Array<Json> = layerState["rules"].unsafeCast<Array<Json>>()
         val ruleTypes = mapOf<String, (Json) -> Rule>(
             CustomPatternRule.key to { it -> CustomPatternRule.deserialize(it, layer.cellTypes) },
             ElectricityRule.key to { _ -> ElectricityRule.deserialize() }
         )
 
-        // Load Rules
         for (ruleState in rulesState) {
             val ruleType = ruleState["type"]
             val ruleDeserializer = ruleTypes[ruleType]
@@ -53,6 +51,15 @@ class JsonMapper {
             if (ruleDeserializer != null) {
                 val rule = ruleDeserializer.invoke(ruleState)
                 layer.rules.add(rule)
+            }
+        }
+
+        // Load cells
+        layer.clear()
+        val cellsState = layerState["cells"].unsafeCast<Array<Array<Int>>>()
+        for ((y, rowState) in cellsState.withIndex()) {
+            for ((x, cellState) in rowState.withIndex()) {
+                layer.set(x, y, cellState)
             }
         }
     }

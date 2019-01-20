@@ -53,6 +53,7 @@ fun init(): Automaton {
     l1.cellTypes.add(Any)
     l1.cellTypes.add(ElectricityRule.Wire)
     l1.cellTypes.add(ElectricityRule.PoweredWire)
+    l1.cellTypes.add(ElectricityRule.ClearWire)
 
     fun waterWorld() {
         l1.set(10, 3, Water.Source)
