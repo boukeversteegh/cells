@@ -1,5 +1,8 @@
 package interactive
 
+import kotlin.js.Json
+import kotlin.js.json
+
 class Layer(private val w: Int, private val h: Int) {
     val cellTypes = mutableListOf<CellType>()
     val rules = mutableListOf<Rule>()
@@ -65,7 +68,6 @@ class Layer(private val w: Int, private val h: Int) {
     fun iterate(lastChangedPositions: List<Position>) {
         val changes = mutableMapOf<Position, CellType>()
         for ((x, y) in lastChangedPositions) {
-            val c = get(x, y)
             val p = pos(x, y)
 
             val neighborPositions: List<Position> = listOf(
@@ -92,13 +94,19 @@ class Layer(private val w: Int, private val h: Int) {
             set(x, y, cellType)
         }
     }
+
+    @JsName("serialize")
+    fun serialize(): Json {
+        return json(
+            "cellTypes" to cellTypes.map { it.serialize(cellTypes) }.toTypedArray(),
+            "rules" to rules
+                .filter { it is SerializableRule }
+                .map { it as SerializableRule }
+                .map { it.serialize(cellTypes) }
+                .toTypedArray()
+        )
+    }
 }
-//
-//val Pair<Int, Int>.x: Int
-//    get() = this.first
-//
-//val Pair<Int, Int>.y: Int
-//    get() = this.second
 
 val Position.left: Position
     get() = Position(x - 1, y)

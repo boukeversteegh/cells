@@ -39,7 +39,7 @@ class Rule extends Component {
         const self = this;
         const editable = this.isEditable();
         const isPattern = rule instanceof cells.interactive.PatternRule;
-
+        const name = rule.name ? rule.name : "Rule";
         const neighbors = [
             {x: -1, y: -1},
             {x: 0, y: -1},
@@ -76,39 +76,41 @@ class Rule extends Component {
             return <div className="rule" data-editable={editable | 0} onClick={() => {
                 this.props.onClick(rule)
             }}>
-                <div className="pattern input">{
-                    neighbors.map((pos, index) => {
-                        let cellType = rule.getInputCellType(pos.x, pos.y);
-                        return <CellType
-                            key={index}
-                            cellType={cellType}
-                            // selected={pos.x === 0 && pos.y === 0}
-                            onClick={() => {
-                                self.clickInputCell(pos.x, pos.y)
-                        }}/>
-                    })
-                }</div>
-                <div className="pattern output">{
-                    neighbors.map((pos, index) => {
-                        let inputCellType = rule.getInputCellType(pos.x, pos.y);
-                        let outputCellType = rule.getOutputCellType(pos.x, pos.y);
-                        let hasOutput = outputCellType !== cells.interactive.Any;
-                        let cellType = (hasOutput ? outputCellType : inputCellType);
-                        console.log(outputCellType);
-                        return <CellType
-                            key={index}
-                            cellType={cellType}
-                            dim={!hasOutput}
-                            // selected={pos.x === 0 && pos.y === 0}
-                            onClick={() => {
-                                self.clickOutputCell(pos.x, pos.y)
-                            }}/>
-                    })
-                }</div>
+                <div className="header">{name}</div>
+                <div className="patterns">
+                    <div className="pattern input">{
+                        neighbors.map((pos, index) => {
+                            let cellType = rule.getInputCellType(pos.x, pos.y);
+                            return <CellType
+                                key={index}
+                                cellType={cellType}
+                                onClick={() => {
+                                    self.clickInputCell(pos.x, pos.y)
+                                }}/>
+                        })
+                    }</div>
+                    <div className="pattern output">{
+                        neighbors.map((pos, index) => {
+                            let inputCellType = rule.getInputCellType(pos.x, pos.y);
+                            let outputCellType = rule.getOutputCellType(pos.x, pos.y);
+                            let hasOutput = outputCellType !== cells.interactive.Any;
+                            let cellType = (hasOutput ? outputCellType : inputCellType);
+                            console.log(outputCellType);
+                            return <CellType
+                                key={index}
+                                cellType={cellType}
+                                dim={!hasOutput}
+                                // selected={pos.x === 0 && pos.y === 0}
+                                onClick={() => {
+                                    self.clickOutputCell(pos.x, pos.y)
+                                }}/>
+                        })
+                    }</div>
+                </div>
             </div>
         }
         return (<div className="rule" data-editable={editable | 0}>{
-
+            <div className="header">{name}</div>
         }</div>)
     }
 }

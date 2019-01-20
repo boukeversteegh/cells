@@ -5,6 +5,8 @@ typealias Color = String
 abstract class CellType {
     @JsName("getColor")
     abstract fun getColor(x: Int, y: Int): Color
+
+    fun serialize(cellTypes: List<CellType>): Int = cellTypes.indexOf(this)
 }
 
 object None : CellType() {

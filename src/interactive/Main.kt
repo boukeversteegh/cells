@@ -9,6 +9,8 @@ fun init(): Automaton {
     val center = pos(0, 0)
 
     val l1 = automaton.addLayer()
+    l1.rules.add(ElectricityRule())
+
 //    l1.rules.add(WaterOverflowRule())
 //    l1.rules.add(WaterRule())
 //     l1.rules.add(GameOfLife())
@@ -49,6 +51,8 @@ fun init(): Automaton {
     l1.cellTypes.add(Sand)
     l1.cellTypes.add(Alive)
     l1.cellTypes.add(Any)
+    l1.cellTypes.add(ElectricityRule.Wire)
+    l1.cellTypes.add(ElectricityRule.PoweredWire)
 
     fun waterWorld() {
         l1.set(10, 3, Water.Source)

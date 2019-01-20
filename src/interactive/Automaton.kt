@@ -1,9 +1,14 @@
 package interactive
 
+import kotlin.js.Json
+import kotlin.js.json
+
 data class Position(val x: Int, val y: Int) {
     operator fun plus(position: Position): Position {
         return Position(x + position.x, y + position.y)
     }
+
+    fun serialize(): Json = json("x" to x, "y" to y)
 }
 
 fun pos(x: Int, y: Int): Position {

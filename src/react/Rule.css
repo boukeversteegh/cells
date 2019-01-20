@@ -11,13 +11,27 @@
     float: left;
     height: 96px;
     width: 96px;
+    border: 4px solid black;
+    margin: -4px;
 }
+
 
 .rule .pattern.output {
     border-top: 3px solid black;
 }
 
-.rule {
+.rule .pattern {
     background-image: linear-gradient(135deg, #aaaaaa 25%, #999999 25%, #999999 50%, #aaaaaa 50%, #aaaaaa 75%, #999999 75%, #999999 100%);
     background-size: 11.31px 11.31px;
+}
+
+.rule .header {
+    line-height: 32px;
+    padding: 0px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.rule .header[data-active="1"] {
+    background: #2f535f;
 }

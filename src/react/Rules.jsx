@@ -4,7 +4,6 @@ import './Rules.css';
 
 class Rules extends Component {
     render() {
-        console.log('rendering rules');
         let rules = this.props.rules;
         let self = this;
         return (<div id="rules">{

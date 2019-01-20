@@ -1,8 +1,55 @@
 package interactive
 
+import kotlin.js.Json
+import kotlin.js.json
+
 typealias MutablePatternMap = MutableMap<Position, CellType>
 
-class CustomPatternRule(override val input: MutablePatternMap, override val output: MutablePatternMap) : PatternRule() {
+class CustomPatternRule(
+    override val input: MutablePatternMap,
+    override val output: MutablePatternMap
+) : PatternRule(), SerializableRule {
+
+    override fun serialize(cellTypes: List<CellType>): Json {
+        return json(
+            "type" to "CustomPatternRule",
+            "input" to toJson(input, cellTypes),
+            "output" to toJson(output, cellTypes)
+        )
+    }
+
+    override val key = CustomPatternRule.key
+
+    companion object {
+        const val key = "CustomPatternRule"
+
+        fun toJson(positions: Map<Position, CellType>, cellTypes: List<CellType>): Array<Json> {
+            return positions.map {
+                json(
+                    "position" to it.key.serialize(),
+                    "cellType" to it.value.serialize(cellTypes)
+                )
+            }.toTypedArray()
+        }
+
+        fun deserialize(ruleState: Json, cellTypes: List<CellType>): CustomPatternRule {
+            fun mapPattern(patternState: Array<Json>): Map<Position, CellType> {
+                return patternState.map {
+                    val x = it["position"].unsafeCast<Json>()["x"].unsafeCast<Int>()
+                    val y = it["position"].unsafeCast<Json>()["y"].unsafeCast<Int>()
+                    pos(x, y) to cellTypes[it["cellType"].unsafeCast<Int>()]
+                }.toMap()
+            }
+
+            val inputState = ruleState["input"].unsafeCast<Array<Json>>()
+            val outputState = ruleState["output"].unsafeCast<Array<Json>>()
+
+            val input = mapPattern(inputState)
+            val output = mapPattern(outputState)
+
+            return CustomPatternRule(input, output)
+        }
+    }
 
     constructor(input: Map<Position, CellType>, output: Map<Position, CellType>) : this(input.toMutableMap(), output.toMutableMap())
 
