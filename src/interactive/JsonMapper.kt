@@ -30,7 +30,10 @@ class JsonMapper {
         layer.cellTypes.clear()
         for (cellTypeState in cellTypesState) {
             val cellType = when (cellTypeState["type"]) {
-                "any" -> Any
+                "Any", "any" -> Any
+                "None" -> None
+                "Alive" -> Alive
+                "Void" -> Void
                 else -> CustomCellType(cellTypeState["color"].toString())
             }
             layer.cellTypes.add(cellType)
@@ -69,7 +72,7 @@ class JsonMapper {
     private fun toJson(cellType: CellType): Json {
         return when (cellType) {
             is CustomCellType -> json("color" to cellType.color, "type" to "custom")
-            is Any -> json("type" to "any")
+            is None -> json("type" to cellType::class.simpleName)
             else -> json("color" to cellType.getColor(0, 0), "type" to "default")
         }
     }
