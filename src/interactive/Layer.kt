@@ -66,7 +66,7 @@ class Layer(private val w: Int, private val h: Int) {
         val changes = mutableMapOf<Position, CellType>()
         for ((x, y) in lastChangedPositions) {
             val c = get(x, y)
-            val p = x to y
+            val p = pos(x, y)
 
             val neighborPositions: List<Position> = listOf(
                 p,
@@ -74,65 +74,40 @@ class Layer(private val w: Int, private val h: Int) {
                 p.right,
                 p.below,
                 p.above,
-                (x - 1 to y - 1),
-                (x - 1 to y + 1),
-                (x + 1 to y - 1),
-                (x + 1 to y + 1)
+                pos(x - 1, y - 1),
+                pos(x - 1, y + 1),
+                pos(x + 1, y - 1),
+                pos(x + 1, y + 1)
             )
-            val neighbors = get(neighborPositions)
+
+            val neighbors: Map<Position, CellType> = get(neighborPositions)
 
             for (rule in rules) {
                 changes.putAll(rule.evaluate(p, neighbors))
             }
-
-            // propagate spread
-            if (c is None && (neighbors[p.left] is Water.Spread || neighbors[p.right] is Water.Spread) && (neighbors[p.below] is Dirt || neighbors[p.below] is Water.Still)) {
-                changes[p] = Water.Spread
-            }
-
-            // generate bounce
-            if (c is Water.Spread && (neighbors[p.left] is Dirt || neighbors[p.right] is Dirt)) {
-                changes[p] = Water.Bounce
-            }
-
-            // propagate bounce
-            if (c is Water.Spread && (neighbors[p.left] is Water.Bounce || neighbors[p.right] is Water.Bounce)) {
-                changes[p] = Water.Bounce
-            }
-
-
-            // generate still
-            if (c is Water.Spread && ((neighbors[p.left] is Water.Bounce || neighbors[p.left] is Dirt) && (neighbors[p.right] is Water.Bounce || neighbors[p.right] is Dirt))) {
-                changes[p] = Water.Still
-            }
-
-            // propagate still
-            if (c is Water.Bounce && (neighbors[p.left] is Water.Still || neighbors[p.right] is Water.Still)) {
-                changes[p] = Water.Still
-            }
         }
 
-        for ((pos, cell) in changes) {
+        for ((pos, cellType) in changes) {
             val (x, y) = pos
-            set(x, y, cell)
+            set(x, y, cellType)
         }
     }
 }
+//
+//val Pair<Int, Int>.x: Int
+//    get() = this.first
+//
+//val Pair<Int, Int>.y: Int
+//    get() = this.second
 
-val Pair<Int, Int>.x: Int
-    get() = this.first
+val Position.left: Position
+    get() = Position(x - 1, y)
 
-val Pair<Int, Int>.y: Int
-    get() = this.second
+val Position.above: Position
+    get() = Position(x, y - 1)
 
-val Pair<Int, Int>.left: Position
-    get() = x - 1 to y
+val Position.below: Position
+    get() = Position(x, y + 1)
 
-val Pair<Int, Int>.above: Position
-    get() = x to y - 1
-
-val Pair<Int, Int>.below: Position
-    get() = x to y + 1
-
-val Pair<Int, Int>.right: Position
-    get() = x + 1 to y
+val Position.right: Position
+    get() = Position(x + 1, y)

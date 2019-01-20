@@ -40,7 +40,9 @@ class JsonMapper {
 
         fun mapPattern(patternState: Array<Json>): Map<Position, CellType> {
             return patternState.map {
-                (it["position"].unsafeCast<Json>()["x"].unsafeCast<Int>() to it["position"].unsafeCast<Json>()["y"].unsafeCast<Int>()) to layer.cellTypes[it["cellType"].unsafeCast<Int>()]
+                val x = it["position"].unsafeCast<Json>()["x"].unsafeCast<Int>()
+                val y = it["position"].unsafeCast<Json>()["y"].unsafeCast<Int>()
+                pos(x, y) to layer.cellTypes[it["cellType"].unsafeCast<Int>()]
             }.toMap()
         }
 

@@ -8,7 +8,6 @@ class Rule extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedCellType: props.selectedCellType,
         }
     }
 
@@ -54,7 +53,26 @@ class Rule extends Component {
             {x: 0, y: 1},
             {x: 1, y: 1},
         ];
+
+
         if (isPattern) {
+            // if (rule instanceof cells.interactive.CustomPatternRule) {
+            //     // const minPosition = rule.getMinPosition();
+            //     // const maxPosition = rule.getMaxPosition();
+            //     //
+            //     // console.log(minPosition, maxPosition);
+            //     // for (let y = Math.min(-1, minPosition.y); y <= Math.max(1, maxPosition.y); y++) {
+            //     //     for (let x = Math.min(-1, minPosition.x); x <= Math.max(1, maxPosition.x); x++) {
+            //     //         console.log(y, x);
+            //     //     }
+            //     // }
+            //
+            //     for (let row of rule.getArea()) {
+            //         console.log(row);
+            //     }
+            // }
+            console.log(rule.getInput());
+
             return <div className="rule" data-editable={editable | 0} onClick={() => {
                 this.props.onClick(rule)
             }}>
@@ -72,10 +90,11 @@ class Rule extends Component {
                 }</div>
                 <div className="pattern output">{
                     neighbors.map((pos, index) => {
-                        let outputCellType = rule.getOutputCellType(pos.x, pos.y);
                         let inputCellType = rule.getInputCellType(pos.x, pos.y);
+                        let outputCellType = rule.getOutputCellType(pos.x, pos.y);
                         let hasOutput = outputCellType !== cells.interactive.Any;
                         let cellType = (hasOutput ? outputCellType : inputCellType);
+                        console.log(outputCellType);
                         return <CellType
                             key={index}
                             cellType={cellType}

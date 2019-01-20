@@ -1,7 +1,14 @@
 package interactive
 
-typealias Position = Pair<Int, Int>
+data class Position(val x: Int, val y: Int) {
+    operator fun plus(position: Position): Position {
+        return Position(x + position.x, y + position.y)
+    }
+}
 
+fun pos(x: Int, y: Int): Position {
+    return Position(x, y)
+}
 
 class Automaton(val w: Int, val h: Int) {
     val layers = mutableListOf<Layer>()
@@ -28,7 +35,7 @@ class Automaton(val w: Int, val h: Int) {
 
     private fun lastChangedPositions(): List<Position> {
         return (0 until h).toList().flatMap { y ->
-            (0 until w).map { x -> x to y }
+            (0 until w).map { x -> pos(x,y) }
         }
     }
 
