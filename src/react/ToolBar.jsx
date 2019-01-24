@@ -1,15 +1,22 @@
 import React, {Component} from 'react';
 import CellTypes from "./CellTypes";
 import Rules from "./Rules";
+import Events from "./Events";
 
 class ToolBar extends Component {
     constructor(props) {
         super(props);
+
+        let self = this;
+
+        props.events.on(Events.RULES_CHANGED, (rules) => {
+            self.setState({rules: rules})
+        });
+
         this.state = {
             layer: props.layer,
-            rules: props.rules,
+            rules: [],
             cellTypes: props.cellTypes,
-            selectedCellType: props.cellTypes[0],
             mapper: new window.cells.interactive.JsonMapper(),
             layerState: '',
         };
@@ -21,10 +28,12 @@ class ToolBar extends Component {
         });
     }
 
-    reloadRules() {
-        this.setState({
-            rules: this.state.layer.getRules()
-        });
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.layerState != this.state.layerState && this.state.layerState !== "") {
+            this.layerStateInput.select();
+            document.execCommand('copy');
+            this.setState({layerState: ""})
+        }
     }
 
     save() {
@@ -34,65 +43,49 @@ class ToolBar extends Component {
         });
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.layerState != this.state.layerState) {
-            this.layerStateInput.select();
-            document.execCommand('copy');
-        }
-    }
-
     load() {
         let layerState = prompt("Paste here", "");
 
         if (layerState) {
             this.state.mapper.loadLayer(this.state.layer, JSON.parse(layerState));
-            this.reloadCellTypes();
-            this.reloadRules();
-            this.forceUpdate();
+            this.props.events.trigger(Events.LAYER_CHANGED, this.state.layer);
         }
     }
 
     clear() {
         this.state.layer.clear();
         this.state.layer.rules.clear();
-        this.reloadRules()
+        this.props.events.trigger(Events.LAYER_CHANGED, this.state.layer)
     }
 
     render() {
         return (<div id="toolbar">
-            <button onClick={() => {
-                this.save()
-            }}>Save
-            </button>
-            <button onClick={() => {
-                this.load()
-            }}>Load
-            </button>
-            <button onClick={() => {
-                this.clear()
-            }}>Clear
-            </button>
-            <input value={this.state.layerState} readOnly
-                   ref={(layerStateInput) => this.layerStateInput = layerStateInput}/>
+            <div id="buttons">
+                <button onClick={() => {
+                    this.save()
+                }}>Save
+                </button>
+                <button onClick={() => {
+                    this.load()
+                }}>Load
+                </button>
+                <button onClick={() => {
+                    this.clear()
+                }}>Clear
+                </button>
+            </div>
+            <input
+                hidden={this.state.layerState === ""}
+                value={this.state.layerState}
+                readOnly
+                ref={(layerStateInput) => this.layerStateInput = layerStateInput}
+            />
             <CellTypes
-                cellTypes={this.state.cellTypes}
-                selectedCellType={this.state.selectedCellType}
-                onSelect={(cellType) => {
-                    this.setState({selectedCellType: cellType});
-                    this.props.onSelectCellType(cellType);
-                }}
-                onAdd={() => {
-                    this.props.onAddCellType();
-                    this.reloadCellTypes();
-
-                }}
+                events={this.props.events}
             />
             <Rules rules={this.state.rules}
-                   selectedCellType={this.state.selectedCellType}
-                   onAddRule={() => {
-                       this.state.layer.addRule();
-                       this.reloadRules();
-                   }}
+                   layer={this.state.layer}
+                   events={this.props.events}
             />
         </div>)
     }

@@ -1,0 +1,11 @@
+#rule-details {
+    width: 200px;
+    border-left: 4px;
+}
+#rule-details input {
+    border: 4px solid black;
+    background: white;
+    display: block;
+    padding: 4px;
+    width: 100%;
+}

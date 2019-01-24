@@ -8,17 +8,11 @@ typealias MutablePatternMap = MutableMap<Position, CellType>
 class CustomPatternRule(
     override val input: MutablePatternMap,
     override val output: MutablePatternMap
-) : PatternRule(), SerializableRule {
-
-    override fun serialize(cellTypes: List<CellType>): Json {
-        return json(
-            "type" to "CustomPatternRule",
-            "input" to toJson(input, cellTypes),
-            "output" to toJson(output, cellTypes)
-        )
-    }
+) : PatternRule(), SerializableRule, NamedRule {
 
     override val key = CustomPatternRule.key
+
+    override var name = "Custom Rule"
 
     companion object {
         const val key = "CustomPatternRule"
@@ -47,7 +41,14 @@ class CustomPatternRule(
             val input = mapPattern(inputState)
             val output = mapPattern(outputState)
 
-            return CustomPatternRule(input, output)
+            val rule = CustomPatternRule(input, output)
+
+            val name = ruleState["name"].unsafeCast<String?>()
+            if (name != null) {
+                rule.name = name
+            }
+
+            return rule
         }
     }
 
@@ -92,6 +93,7 @@ class CustomPatternRule(
         return pos(maxX, maxY)
     }
 
+    @Deprecated("not used for now")
     fun getArea(): Array<Array<Position>> {
         val min = getMinPosition()
         val max = getMaxPosition()
@@ -104,4 +106,12 @@ class CustomPatternRule(
         }
     }
 
+    override fun serialize(cellTypes: List<CellType>): Json {
+        return json(
+            "type" to "CustomPatternRule",
+            "input" to toJson(input, cellTypes),
+            "output" to toJson(output, cellTypes),
+            "name" to name
+        )
+    }
 }

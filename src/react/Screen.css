@@ -16,7 +16,9 @@ canvas {
 }
 
 canvas {
-    float: left;
-    clear: both;
-    width: 1024px;
+    /*float: left;*/
+    /*clear: both;*/
+    width: 100%;
+    object-fit: contain;
+    /*display: flex;*/
 }

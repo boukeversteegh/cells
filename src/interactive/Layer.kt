@@ -60,6 +60,11 @@ class Layer(private val w: Int, private val h: Int) {
         rules.add(CustomPatternRule(emptyMap(), emptyMap()))
     }
 
+    @JsName("deleteRule")
+    fun deleteRule(rule: Rule) {
+        rules.remove(rule)
+    }
+
     @JsName("addCellType")
     fun addCellType(color: String = "#FF00FF") {
         cellTypes.add(CustomCellType(color))

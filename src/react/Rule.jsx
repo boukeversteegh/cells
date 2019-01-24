@@ -1,14 +1,19 @@
 import React, {Component} from 'react';
 import CellType from "./CellType";
 import './Rule.css';
+import Events from "./Events";
 
 const cells = window.cells;
 
 class Rule extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-        }
+
+        props.events.on(Events.RULE_UPDATED, (rule) => {
+            if (rule === props.rule) {
+                this.forceUpdate();
+            }
+        })
     }
 
     isEditable() {
@@ -73,10 +78,10 @@ class Rule extends Component {
             // }
             console.log(rule.getInput());
 
-            return <div className="rule" data-editable={editable | 0} onClick={() => {
-                this.props.onClick(rule)
-            }}>
-                <div className="header">{name}</div>
+            return <div className="rule" data-editable={editable | 0}>
+                <div className="header" onClick={() => {
+                    this.props.events.trigger(Events.RULE_SELECTED, rule);
+                }}>{name}</div>
                 <div className="patterns">
                     <div className="pattern input">{
                         neighbors.map((pos, index) => {
@@ -110,7 +115,9 @@ class Rule extends Component {
             </div>
         }
         return (<div className="rule" data-editable={editable | 0}>{
-            <div className="header">{name}</div>
+            <div className="header" onClick={() => {
+                this.props.events.trigger(Events.RULE_SELECTED, rule);
+            }}>{name}</div>
         }</div>)
     }
 }

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import CellType from "./CellType";
 import './CellTypes.css';
+import Events from "./Events";
 
 const cells = window.cells;
 
@@ -8,43 +9,51 @@ class CellTypes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedCellType: props.selectedCellType,
-        }
-    }
+            layer: null,
+            cellTypes: [],
+            selectedCellType: null,
+        };
 
-    static getDerivedStateFromProps(props, state) {
-        if (props.cellTypes.indexOf(state.selectedCellType) === -1) {
-            return {
-                selectedCellType: props.cellTypes[0]
-            }
-        }
-        return null;
-    }
-
-    selectCellType(cellType) {
-        this.setState({selectedCellType: cellType});
-        this.props.onSelect(cellType);
+        props.events.on(Events.CELL_TYPE_SELECTED, cellType => {
+            this.setState({selectedCellType: cellType})
+        });
+        props.events.on(Events.CELL_TYPES_CHANGED, cellTypes => {
+            this.setState({cellTypes: cellTypes})
+        });
+        props.events.on(Events.LAYER_CHANGED, layer => {
+            this.setState({layer: layer});
+        });
     }
 
     render() {
         let self = this;
-        let isCustom = (this.props.selectedCellType instanceof cells.interactive.CustomCellType);
+        let isCustom = (this.state.selectedCellType instanceof cells.interactive.CustomCellType);
         return (<div id="cell-types">
             {
-                this.props.cellTypes
+                this.state.cellTypes
                     .map(function (cellType, index) {
                         return <CellType
                             key={index}
                             cellType={cellType}
                             onClick={() => {
-                                self.selectCellType(cellType)
+                                self.props.events.trigger(Events.CELL_TYPE_SELECTED, cellType)
                             }}
-
                             selected={self.state.selectedCellType === cellType}
                         />;
                     })
             }
             <div
+                className="cell"
+                onClick={() => {
+                    if (self.state.layer) {
+                        self.state.layer.addCellType();
+                        self.props.events.trigger(Events.CELL_TYPES_CHANGED, self.state.layer.getCellTypes());
+                    }
+                }}
+            >
+                +
+            </div>
+            {isCustom && <div
                 className="cell"
                 onClick={(event) => {
                     if (isCustom) {
@@ -55,16 +64,7 @@ class CellTypes extends Component {
                         }
                     }
                 }}
-            >🎨</div>
-            <div
-                className="cell"
-                onClick={() => {
-                    this.props.onAdd();
-                    this.forceUpdate();
-                }}
-            >
-                +
-            </div>
+            >🎨</div>}
         </div>)
     }
 }
