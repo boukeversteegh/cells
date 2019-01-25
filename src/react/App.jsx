@@ -18,6 +18,7 @@ class App extends Component {
             automaton: automaton,
             events: events,
             selectedRule: null,
+            rulePaint: false,
         };
 
         // Reducers
@@ -38,7 +39,7 @@ class App extends Component {
 
         events.on(Events.CELL_TYPES_CHANGED, cellTypes => {
             this.state.events.trigger(Events.CELL_TYPE_SELECTED, cellTypes[0]);
-        })
+        });
 
         events.on(Events.LAYER_CHANGED, layer => {
             this.state.events.trigger(Events.CELL_TYPES_CHANGED, layer.getCellTypes());
@@ -53,6 +54,9 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                <label>Magic rule paint <input type="checkbox" onChange={() => {
+                    this.setState({rulePaint: !this.state.rulePaint})
+                }} value={this.state.rulePaint}/></label>
                 <ToolBar
                     events={this.state.events}
                     layer={this.state.layer}
@@ -81,7 +85,27 @@ class App extends Component {
                         layer={this.state.layer}
                         automaton={this.state.automaton}
                         onPaint={(x, y) => {
-                            this.state.layer.set(x, y, this.state.selectedCellType)
+                            if (!this.state.rulePaint) {
+                                this.state.layer.set(x, y, this.state.selectedCellType);
+                            } else {
+                                let c = this.state.layer.get(x, y);
+                                let rule = this.state.layer.addRule();
+                                console.log(rule);
+
+                                rule.setInput(-1, -1, this.state.layer.get(x - 1, y - 1));
+                                rule.setInput(0, -1, this.state.layer.get(x, y - 1));
+                                rule.setInput(1, -1, this.state.layer.get(x + 1, y - 1));
+                                rule.setInput(-1, 0, this.state.layer.get(x - 1, y));
+                                rule.setInput(0, 0, this.state.layer.get(x, y));
+                                rule.setInput(1, 0, this.state.layer.get(x + 1, y));
+                                rule.setInput(-1, 1, this.state.layer.get(x - 1, y + 1));
+                                rule.setInput(0, 1, this.state.layer.get(x, y + 1));
+                                rule.setInput(1, 1, this.state.layer.get(x + 1, y + 1));
+
+                                rule.setOutput(0, 0, this.state.selectedCellType);
+                                this.state.events.trigger(Events.RULES_CHANGED, this.state.layer.getRules());
+                                // console.log()
+                            }
                         }}
                     />
                 </div>
