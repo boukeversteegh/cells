@@ -18,9 +18,11 @@ class Mouse {
         this.canvas.onmousedown = function (evt) {
             self.down = true;
         };
+
         this.canvas.onmouseup = function (evt) {
             self.down = false;
         };
+
         this.canvas.onmousemove = function (evt) {
             let rect = self.canvas.getBoundingClientRect();
             let scale = rect.width / self.canvas.width;

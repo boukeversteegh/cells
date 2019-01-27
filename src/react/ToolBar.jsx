@@ -52,9 +52,13 @@ class ToolBar extends Component {
         }
     }
 
-    clear() {
-        this.state.layer.clear();
+    clearRules() {
         this.state.layer.rules.clear();
+        this.props.events.trigger(Events.LAYER_CHANGED, this.state.layer)
+    }
+
+    clearScreen() {
+        this.state.layer.clear();
         this.props.events.trigger(Events.LAYER_CHANGED, this.state.layer)
     }
 
@@ -70,8 +74,12 @@ class ToolBar extends Component {
                 }}>Load
                 </button>
                 <button onClick={() => {
-                    this.clear()
-                }}>Clear
+                    this.clearRules()
+                }}>Clear Rules
+                </button>
+                <button onClick={() => {
+                    this.clearScreen()
+                }}>Clear Screen
                 </button>
             </div>
             <input
