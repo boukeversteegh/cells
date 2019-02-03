@@ -9,11 +9,19 @@ class Rule extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {selected: false};
+
         props.events.on(Events.RULE_UPDATED, (rule) => {
             if (rule === props.rule) {
                 this.forceUpdate();
             }
         })
+
+        props.events.on(Events.RULE_SELECTED, (rule) => {
+            this.setState({
+                selected: (rule === props.rule)
+            });
+        });
     }
 
     isEditable() {
@@ -21,7 +29,6 @@ class Rule extends Component {
     }
 
     clickInputCell(x, y) {
-        console.log(this);
         if (this.isEditable()) {
             this.props.rule.setInput(x, y, this.props.selectedCellType);
             this.forceUpdate();
@@ -43,6 +50,9 @@ class Rule extends Component {
         const rule = this.props.rule;
         const self = this;
         const editable = this.isEditable();
+        // console.log(this);
+        // const selected = false;
+        const selected = this.state.selected;
         const isPattern = rule instanceof Core.PatternRule;
         const name = rule.name ? rule.name : "Rule";
         const neighbors = [
@@ -78,7 +88,9 @@ class Rule extends Component {
             // }
             console.log(rule.getInput());
 
-            return <div className="rule" data-editable={editable | 0}>
+            return <div className="rule"
+                        data-editable={editable | 0}
+                        data-selected={selected | 0}>
                 <div className="header" onClick={() => {
                     this.props.events.trigger(Events.RULE_SELECTED, rule);
                 }}>{name}</div>
@@ -114,7 +126,7 @@ class Rule extends Component {
                 </div>
             </div>
         }
-        return (<div className="rule" data-editable={editable | 0}>{
+        return (<div className="rule" data-editable={editable | 0} data-selected={selected | 0}>{
             <div className="header" onClick={() => {
                 this.props.events.trigger(Events.RULE_SELECTED, rule);
             }}>{name}</div>

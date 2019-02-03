@@ -50,20 +50,29 @@ class RuleDetails extends Component {
         let rule = this.state.rule;
         let name = this.state.name;
         let rotatable = this.state.rotatable;
+        let isCustomPatternRule = (rule instanceof Core.CustomPatternRule);
 
         if (rule) {
             console.log(rule);
             return <div id="rule-details">
                 <input type="text" value={name} onChange={this.onChangeName}
-                       readOnly={!(rule instanceof Core.CustomPatternRule)}/>
-                <label>Rotatable<input type="checkbox" value={true} onChange={this.onChangeRotatable} checked={rotatable}/></label>
+                       readOnly={!isCustomPatternRule}/>
+                {
+                    isCustomPatternRule && <label>Rotatable<input
+                        type="checkbox"
+                        value={true}
+                        onChange={this.onChangeRotatable}
+                        checked={rotatable}
+                        readOnly={!isCustomPatternRule}
+                    /></label>
+                }
                 <button onClick={() => {
                     this.props.events.trigger(Events.RULE_DELETED, rule)
                 }}>Delete Rule
                 </button>
             </div>
         } else {
-            return <div id="rule-details">Select a rule</div>
+            return <div id="rule-details"></div>
         }
     }
 }

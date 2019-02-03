@@ -7,6 +7,12 @@
     margin: 1px;
 }
 
+
+.rule[data-selected="1"] {
+    overflow: hidden;
+    outline: magenta 1px solid;
+}
+
 .rule .pattern {
     float: left;
     height: 96px;
