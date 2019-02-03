@@ -19,11 +19,12 @@
     <option name="pathToUserRulesConfiguration" value="" />
     <option name="pathToJarWithRules" value="" />
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="JSX" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="true" project-jdk-name="Kotlin SDK" project-jdk-type="KotlinSDK">
-    <output url="file://$PROJECT_DIR$/public/build" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="Kotlin SDK" project-jdk-type="KotlinSDK">
+    <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="SuppressionsComponent">
     <option name="suppComments" value="[]" />
