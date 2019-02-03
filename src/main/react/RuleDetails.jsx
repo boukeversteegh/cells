@@ -24,12 +24,14 @@ class RuleDetails extends Component {
         });
 
         this.onChangeName = this.onChangeName.bind(this);
+        this.onChangeRotatable = this.onChangeRotatable.bind(this);
     }
 
     loadRule(rule) {
         this.setState({
             rule: rule,
-            name: rule && rule.name ? rule.name : 'Rule'
+            name: rule && rule.name ? rule.name : 'Rule',
+            rotatable: rule && rule instanceof Core.PatternRule && rule.rotatable
         });
     }
 
@@ -38,15 +40,23 @@ class RuleDetails extends Component {
         this.props.events.trigger(Events.RULE_UPDATED, this.state.rule);
     }
 
+    onChangeRotatable(event) {
+        console.log(event.target.checked);
+        this.state.rule.rotatable = event.target.checked;
+        this.props.events.trigger(Events.RULE_UPDATED, this.state.rule);
+    }
+
     render() {
         let rule = this.state.rule;
         let name = this.state.name;
+        let rotatable = this.state.rotatable;
 
         if (rule) {
             console.log(rule);
             return <div id="rule-details">
-                <input value={name} onChange={this.onChangeName}
+                <input type="text" value={name} onChange={this.onChangeName}
                        readOnly={!(rule instanceof Core.CustomPatternRule)}/>
+                <label>Rotatable<input type="checkbox" value={true} onChange={this.onChangeRotatable} checked={rotatable}/></label>
                 <button onClick={() => {
                     this.props.events.trigger(Events.RULE_DELETED, rule)
                 }}>Delete Rule

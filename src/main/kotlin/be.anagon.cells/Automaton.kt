@@ -8,6 +8,10 @@ data class Position(val x: Int, val y: Int) {
         return Position(x + position.x, y + position.y)
     }
 
+    operator fun minus(position: Position): Position {
+        return Position(x - position.x, y - position.y)
+    }
+
     fun serialize(): Json = json("x" to x, "y" to y)
 }
 

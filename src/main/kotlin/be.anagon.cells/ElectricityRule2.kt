@@ -1,4 +1,4 @@
-package interactive
+package be.anagon.cells
 
 import kotlin.js.Json
 import kotlin.js.json
@@ -15,7 +15,7 @@ class ElectricityRule2 : PatternRule(), NamedRule, SerializableRule {
 
     override val rotatable = true
 
-    override val key = ElectricityRule2.key
+    override val key = Companion.key
 
     companion object {
         const val key = "ElectricityRule2"
@@ -23,7 +23,7 @@ class ElectricityRule2 : PatternRule(), NamedRule, SerializableRule {
     }
 
     override fun serialize(cellTypes: List<CellType>): Json {
-        return json("type" to ElectricityRule2.key)
+        return json("type" to Companion.key)
     }
 
     override val name = "Electricity 2"

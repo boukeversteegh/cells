@@ -9,7 +9,7 @@ class CustomPatternRule(
     override val input: MutablePatternMap,
     override val output: MutablePatternMap
 ) : PatternRule(), SerializableRule, NamedRule {
-    override val rotatable = false
+    override var rotatable = false
 
     override val key = Companion.key
 
@@ -48,6 +48,8 @@ class CustomPatternRule(
             if (name != null) {
                 rule.name = name
             }
+
+            rule.rotatable = ruleState["rotatable"].unsafeCast<Boolean>()
 
             return rule
         }
@@ -112,7 +114,8 @@ class CustomPatternRule(
             "type" to "CustomPatternRule",
             "input" to toJson(input, cellTypes),
             "output" to toJson(output, cellTypes),
-            "name" to name
+            "name" to name,
+            "rotatable" to rotatable
         )
     }
 }

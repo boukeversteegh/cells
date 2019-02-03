@@ -2,6 +2,30 @@ package be.anagon.cells
 
 typealias PatternMap = Map<Position, CellType>
 
+fun PatternMap.rotateRight(): PatternMap {
+    return entries.map {
+        /*
+         A
+         +
+
+         *A
+
+         */
+        val (pos, cellType) = it
+        Position(x = -pos.y, y = pos.x) to cellType
+    }.toMap()
+}
+
+private fun PatternMap.relativeTo(position: Position): PatternMap {
+    return map {
+        (it.key - position) to it.value
+    }.toMap()
+}
+
+private fun PatternMap.matches(otherMap: Map<Position, CellType>): Boolean {
+    return all { it.value == otherMap[it.key] }
+}
+
 abstract class PatternRule : Rule() {
     abstract val input: PatternMap
     abstract val output: PatternMap
@@ -10,20 +34,25 @@ abstract class PatternRule : Rule() {
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         val changes = mutableMapOf<Position, CellType>()
 
-        // evaluate normal state
-        val patternMatches = input.entries.all { neighbors[position + it.key] == it.value }
-        // append changes
-        if (patternMatches) {
+        val relativeNeighbors = neighbors.relativeTo(position)
+
+        if (input.matches(relativeNeighbors)) {
             changes.putAll(position + output)
         }
 
-        return changes
-    }
+        if (rotatable) {
+            var rotatedInput = input
+            var rotatedOutput = output
+            repeat(3) {
+                rotatedInput = rotatedInput.rotateRight()
+                rotatedOutput = rotatedOutput.rotateRight()
+                if (rotatedInput.matches(relativeNeighbors)) {
+                    changes.putAll(position + rotatedOutput)
+                }
+            }
+        }
 
-    companion object {
-//        fun patternMatches(patternMap, map) {
-//
-//        }
+        return changes
     }
 
     // @todo remember center?
@@ -42,11 +71,11 @@ abstract class PatternRule : Rule() {
     fun getInput(x: Int, y: Int): CellType {
         return input.getOrElse(pos(x, y)) { Any }
     }
-
     @JsName("getOutputCellType")
     fun getOutput(x: Int, y: Int): CellType {
         return output.getOrElse(pos(x, y)) { Any }
     }
+
 }
 
 private operator fun <V> Position.plus(map: Map<Position, V>): Map<Position, V> {
