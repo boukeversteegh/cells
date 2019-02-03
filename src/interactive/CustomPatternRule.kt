@@ -9,6 +9,7 @@ class CustomPatternRule(
     override val input: MutablePatternMap,
     override val output: MutablePatternMap
 ) : PatternRule(), SerializableRule, NamedRule {
+    override val rotatable = false
 
     override val key = CustomPatternRule.key
 
