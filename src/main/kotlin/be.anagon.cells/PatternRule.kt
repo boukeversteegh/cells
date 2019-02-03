@@ -5,18 +5,32 @@ typealias PatternMap = Map<Position, CellType>
 abstract class PatternRule : Rule() {
     abstract val input: PatternMap
     abstract val output: PatternMap
+    abstract val rotatable: Boolean
 
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
-        val patternMatches = input.entries.all { neighbors[position + it.key] == it.value }
+        val changes = mutableMapOf<Position, CellType>()
 
-        return if (patternMatches) (position + output) else emptyMap()
+        // evaluate normal state
+        val patternMatches = input.entries.all { neighbors[position + it.key] == it.value }
+        // append changes
+        if (patternMatches) {
+            changes.putAll(position + output)
+        }
+
+        return changes
+    }
+
+    companion object {
+//        fun patternMatches(patternMap, map) {
+//
+//        }
     }
 
     // @todo remember center?
     @JsName("getInput")
     fun getInput(): Array<Array<CellType>> {
         val array = Array(3) { Array<CellType>(3) { Any } }
-        input.forEach { it ->
+        input.forEach {
             val position = it.key
             val cellType = it.value
             array[position.y + 1][position.x + 1] = cellType
