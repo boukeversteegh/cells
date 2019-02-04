@@ -50,8 +50,6 @@ class Rule extends Component {
         const rule = this.props.rule;
         const self = this;
         const editable = this.isEditable();
-        // console.log(this);
-        // const selected = false;
         const selected = this.state.selected;
         const isPattern = rule instanceof Core.PatternRule;
         const name = rule.name ? rule.name : "Rule";
@@ -86,7 +84,6 @@ class Rule extends Component {
             //         console.log(row);
             //     }
             // }
-            console.log(rule.getInput());
 
             return <div className="rule"
                         data-editable={editable | 0}

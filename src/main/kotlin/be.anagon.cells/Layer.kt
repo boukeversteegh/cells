@@ -8,6 +8,8 @@ class Layer(private val w: Int, private val h: Int) {
     val rules = mutableListOf<Rule>()
     private val cells = Array(h) { Array<CellType>(w) { None } }
 
+    private val changes = mutableSetOf<Position>()
+
     @JsName("get")
     fun get(x: Int, y: Int): CellType {
         if (y !in 0 until h || x !in 0 until w) {
@@ -20,6 +22,7 @@ class Layer(private val w: Int, private val h: Int) {
     fun set(x: Int, y: Int, cellType: CellType) {
         if (y in 0 until h && x in 0 until w && cellType !is Any) {
             cells[y][x] = cellType
+            changes.add(Position(x, y))
         }
     }
 
@@ -28,7 +31,7 @@ class Layer(private val w: Int, private val h: Int) {
     }
 
     private fun get(positions: List<Position>): Map<Position, CellType> {
-        return positions.map { it -> it to get(it) }.toMap()
+        return positions.map { it to get(it) }.toMap()
     }
 
     @JsName("setByIndex")
@@ -72,9 +75,41 @@ class Layer(private val w: Int, private val h: Int) {
         cellTypes.add(CustomCellType(color))
     }
 
-    fun iterate(lastChangedPositions: List<Position>) {
+    private var iteration: Int = 0
+
+    private fun getLastChanges(): Set<Position> {
+        return if (iteration == 0) {
+            (0 until h).toList().flatMap { y ->
+                (0 until w).map { x -> pos(x, y) }
+            }.toSet()
+        } else {
+            changes.toSet()
+        }
+    }
+
+    fun iterate() {
+        val lastChanges = getLastChanges()
+        changes.clear()
+        iteration++
+
+
+        val positionsToCheck = lastChanges.flatMap { p ->
+            listOf(
+                p,
+                p.left,
+                p.right,
+                p.below,
+                p.above,
+                pos(p.x - 1, p.y - 1),
+                pos(p.x - 1, p.y + 1),
+                pos(p.x + 1, p.y - 1),
+                pos(p.x + 1, p.y + 1)
+            )
+        }.toSet()
+
         val changes = mutableMapOf<Position, CellType>()
-        for ((x, y) in lastChangedPositions) {
+        for ((x, y) in positionsToCheck) {
+            console.log("trying", x, y)
             val p = pos(x, y)
 
             val neighborPositions: List<Position> = listOf(
@@ -100,6 +135,8 @@ class Layer(private val w: Int, private val h: Int) {
             val (x, y) = pos
             set(x, y, cellType)
         }
+
+        this.changes.addAll(changes.keys)
     }
 
     @JsName("serialize")

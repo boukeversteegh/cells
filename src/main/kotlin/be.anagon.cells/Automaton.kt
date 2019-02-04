@@ -42,13 +42,7 @@ class Automaton(val w: Int, val h: Int) {
         return layers.toTypedArray()
     }
 
-    private fun lastChangedPositions(): List<Position> {
-        return (0 until h).toList().flatMap { y ->
-            (0 until w).map { x -> pos(x,y) }
-        }
-    }
-
     fun iterate() {
-        layers[0].iterate(lastChangedPositions())
+        layers[0].iterate()
     }
 }
