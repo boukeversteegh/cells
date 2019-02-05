@@ -15,7 +15,7 @@ class Rule extends Component {
             if (rule === props.rule) {
                 this.forceUpdate();
             }
-        })
+        });
 
         props.events.on(Events.RULE_SELECTED, (rule) => {
             this.setState({
@@ -31,7 +31,7 @@ class Rule extends Component {
     clickInputCell(x, y) {
         if (this.isEditable()) {
             this.props.rule.setInput(x, y, this.props.selectedCellType);
-            this.forceUpdate();
+            this.props.events.trigger(Events.RULE_UPDATED, this.props.rule);
         } else {
             console.log("Not editable")
         }
@@ -40,7 +40,7 @@ class Rule extends Component {
     clickOutputCell(x, y) {
         if (this.isEditable()) {
             this.props.rule.setOutput(x, y, this.props.selectedCellType);
-            this.forceUpdate();
+            this.props.events.trigger(Events.RULE_UPDATED, this.props.rule);
         } else {
             console.log("Not editable")
         }

@@ -35,6 +35,11 @@ class App extends Component {
                 events.trigger(Events.RULE_SELECTED, null);
             }
         });
+
+        events.on(Events.RULE_UPDATED, (rule) => {
+            layer.ruleUpdated();
+        });
+
         events.on(Events.CELL_TYPE_SELECTED, cellType => {
             this.setState({selectedCellType: cellType});
         });

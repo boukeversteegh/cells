@@ -10,6 +10,13 @@ class Layer(private val w: Int, private val h: Int) {
 
     private val changes = mutableSetOf<Position>()
 
+    private var evaluateEntireLayer = true
+
+    @JsName("ruleUpdated")
+    fun ruleUpdated() {
+        evaluateEntireLayer = true
+    }
+
     @JsName("get")
     fun get(x: Int, y: Int): CellType {
         if (y !in 0 until h || x !in 0 until w) {
@@ -62,12 +69,14 @@ class Layer(private val w: Int, private val h: Int) {
     fun addRule(): CustomPatternRule {
         val rule = CustomPatternRule(emptyMap(), emptyMap())
         rules.add(rule)
+        evaluateEntireLayer = true
         return rule
     }
 
     @JsName("deleteRule")
     fun deleteRule(rule: Rule) {
         rules.remove(rule)
+        evaluateEntireLayer = true
     }
 
     @JsName("addCellType")
@@ -75,23 +84,22 @@ class Layer(private val w: Int, private val h: Int) {
         cellTypes.add(CustomCellType(color))
     }
 
-    private var iteration: Int = 0
-
     private fun getLastChanges(): Set<Position> {
-        return if (iteration == 0) {
-            (0 until h).toList().flatMap { y ->
+        return if (evaluateEntireLayer) {
+            evaluateEntireLayer = false
+            val allPositions = (0 until h).toList().flatMap { y ->
                 (0 until w).map { x -> pos(x, y) }
             }.toSet()
+            allPositions
         } else {
             changes.toSet()
         }
     }
 
     fun iterate() {
+        // todo: re-evaluate entire grid when changing rules
         val lastChanges = getLastChanges()
         changes.clear()
-        iteration++
-
 
         val positionsToCheck = lastChanges.flatMap { p ->
             listOf(
