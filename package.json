@@ -2,7 +2,11 @@
   "name": "cells-react",
   "version": "0.1.0",
   "private": true,
+  "main": "cells",
   "dependencies": {
+    "kotlin": "^1.3.20",
+    "kotlin-test": "^1.3.20",
+    "mocha": "^5.2.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.3"
@@ -11,6 +15,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test-kotlin": "mocha --watch build/classes/kotlin/test/cells_test.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
