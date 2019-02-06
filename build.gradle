@@ -28,24 +28,23 @@ dependencies {
 }
 
 compileKotlin2Js {
-    kotlinOptions.outputFile = "${projectDir}/public/build/cells.js"
+    kotlinOptions.outputFile = "${projectDir}/src/build/cells.js"
     kotlinOptions.moduleKind = "commonjs"
-//    kotlinOptions.noStdlib = true
 }
 
 
-//[compileKotlin2Js, compileTestKotlin2Js]*.configure {
 compileTestKotlin2Js.configure {
     kotlinOptions.moduleKind = "commonjs"
-//    kotlinOptions.outputFile = "${projectDir}"
 }
 
-task mocha(type: NodeTask, dependsOn: [compileTestKotlin2Js]) {
+
+// convenience task for testing kotlin that is not strictly necessary and doesn't integrate nicely with intellij
+task testKotlin(type: NodeTask, dependsOn: [compileTestKotlin2Js]) {
     script = file('node_modules/mocha/bin/mocha')
     environment = [
-        'NODE_PATH': "${projectDir}/public/build"
+        'NODE_PATH': "${projectDir}/src/build"
     ]
     args = ['--ui','bdd', compileTestKotlin2Js.outputFile]
 }
 
-test.dependsOn mocha
+test.dependsOn testKotlin

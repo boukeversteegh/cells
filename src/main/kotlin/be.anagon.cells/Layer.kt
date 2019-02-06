@@ -117,7 +117,6 @@ class Layer(private val w: Int, private val h: Int) {
 
         val changes = mutableMapOf<Position, CellType>()
         for ((x, y) in positionsToCheck) {
-            console.log("trying", x, y)
             val p = pos(x, y)
 
             val neighborPositions: List<Position> = listOf(

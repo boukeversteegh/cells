@@ -1,6 +1,7 @@
+import cells from "../../build/cells";
 class Core {
     CustomPatternRule = null;
     PatternRule = null;
 }
 
-export default window.cells.be.anagon.cells;
+export default cells.be.anagon.cells;
