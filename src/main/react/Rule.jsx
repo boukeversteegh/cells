@@ -16,12 +16,13 @@ class Rule extends Component {
                 this.forceUpdate();
             }
         });
+    }
 
-        props.events.on(Events.RULE_SELECTED, (rule) => {
-            this.setState({
-                selected: (rule === props.rule)
-            });
-        });
+    componentDidMount() {
+        console.log(this.props.rule);
+        this.props.app.Rules.onSelect(rule => this.setState({
+            selected: (rule === this.props.rule)
+        }));
     }
 
     isEditable() {
@@ -85,12 +86,17 @@ class Rule extends Component {
             //     }
             // }
 
-            return <div className="rule"
-                        data-editable={editable | 0}
-                        data-selected={selected | 0}>
-                <div className="header" onClick={() => {
-                    this.props.events.trigger(Events.RULE_SELECTED, rule);
-                }}>{name}</div>
+            return <div
+                className="rule"
+                data-editable={editable | 0}
+                data-selected={selected | 0}
+            >
+                <div
+                    className="header"
+                    onClick={() => this.props.app.Rules.select(rule)}
+                >
+                    {name}
+                </div>
                 <div className="patterns">
                     <div className="pattern input">{
                         neighbors.map((pos, index) => {
@@ -109,7 +115,6 @@ class Rule extends Component {
                             let outputCellType = rule.getOutputCellType(pos.x, pos.y);
                             let hasOutput = outputCellType !== Core.Any;
                             let cellType = (hasOutput ? outputCellType : inputCellType);
-                            console.log(outputCellType);
                             return <CellType
                                 key={index}
                                 cellType={cellType}
@@ -123,11 +128,9 @@ class Rule extends Component {
                 </div>
             </div>
         }
-        return (<div className="rule" data-editable={editable | 0} data-selected={selected | 0}>{
-            <div className="header" onClick={() => {
-                this.props.events.trigger(Events.RULE_SELECTED, rule);
-            }}>{name}</div>
-        }</div>)
+        return <div className="rule" data-editable={editable | 0} data-selected={selected | 0}>{
+            <div className="header" onClick={() => this.props.app.Rules.select(rule)}>{name}</div>
+        }</div>
     }
 }
 

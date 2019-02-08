@@ -14,15 +14,23 @@ class CellTypes extends Component {
             selectedCellType: null,
         };
 
-        props.events.on(Events.CELL_TYPE_SELECTED, cellType => {
-            this.setState({selectedCellType: cellType})
-        });
         props.events.on(Events.CELL_TYPES_CHANGED, cellTypes => {
             this.setState({cellTypes: cellTypes})
         });
+
         props.events.on(Events.LAYER_CHANGED, layer => {
             this.setState({layer: layer});
         });
+
+        props.events.on(Events.CELL_TYPE_SELECTED, cellType => {
+            this.setState({selectedCellType: cellType})
+        });
+    }
+
+    componentDidMount() {
+        this.props.app.CellTypes.onSelect(cellType => this.setState({
+            selectedCellType: cellType
+        }))
     }
 
     render() {
@@ -36,7 +44,7 @@ class CellTypes extends Component {
                             key={index}
                             cellType={cellType}
                             onClick={() => {
-                                self.props.events.trigger(Events.CELL_TYPE_SELECTED, cellType)
+                                self.props.app.CellTypes.select(cellType);
                             }}
                             selected={self.state.selectedCellType === cellType}
                         />;

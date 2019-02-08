@@ -10,7 +10,7 @@ class Layer(private val w: Int, private val h: Int) {
 
     private val changes = mutableSetOf<Position>()
 
-    private var evaluateEntireLayer = true
+    private var evaluateEntireLayer = false
 
     @JsName("ruleUpdated")
     fun ruleUpdated() {
@@ -68,9 +68,13 @@ class Layer(private val w: Int, private val h: Int) {
     @JsName("addRule")
     fun addRule(): CustomPatternRule {
         val rule = CustomPatternRule(emptyMap(), emptyMap())
+        addRule(rule)
+        return rule
+    }
+
+    fun addRule(rule: Rule) {
         rules.add(rule)
         evaluateEntireLayer = true
-        return rule
     }
 
     @JsName("deleteRule")

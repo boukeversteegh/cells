@@ -18,6 +18,9 @@ class CustomPatternRule(
     companion object {
         const val key = "CustomPatternRule"
 
+        @JsName("new")
+        fun new() = CustomPatternRule(emptyMap(), emptyMap())
+
         fun toJson(positions: Map<Position, CellType>, cellTypes: List<CellType>): Array<Json> {
             return positions.map {
                 json(

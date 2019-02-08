@@ -9,25 +9,15 @@ class ToolBar extends Component {
     constructor(props) {
         super(props);
 
-        let self = this;
-
-        props.events.on(Events.RULES_CHANGED, (rules) => {
-            self.setState({rules: rules})
-        });
-
         this.state = {
             layer: props.layer,
-            rules: [],
             cellTypes: props.cellTypes,
             mapper: new Core.JsonMapper(),
             layerState: '',
         };
     }
 
-    reloadCellTypes() {
-        this.setState({
-            cellTypes: this.state.layer.getCellTypes(),
-        });
+    componentDidMount() {
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -55,8 +45,7 @@ class ToolBar extends Component {
     }
 
     clearRules() {
-        this.state.layer.rules.clear();
-        this.props.events.trigger(Events.LAYER_CHANGED, this.state.layer)
+        this.props.app.Rules.clear();
     }
 
     clearScreen() {
@@ -92,10 +81,12 @@ class ToolBar extends Component {
             />
             <CellTypes
                 events={this.props.events}
+                app={this.props.app}
             />
-            <Rules rules={this.state.rules}
-                   layer={this.state.layer}
-                   events={this.props.events}
+            <Rules
+                layer={this.state.layer}
+                events={this.props.events}
+                app={this.props.app}
             />
         </div>)
     }

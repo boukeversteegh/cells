@@ -7,7 +7,7 @@ typealias Color = String
 
 abstract class CellType {
     @JsName("getColor")
-    abstract fun getColor(x: Int, y: Int): Color
+    open fun getColor(x: Int, y: Int): Color= "#FF00FF"
 
     open fun serialize(): Json {
         return json("type" to this::class.simpleName)

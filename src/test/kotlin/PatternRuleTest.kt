@@ -3,17 +3,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PatternRuleTest {
-    object EmptyCell : CellType() {
-        override fun getColor(x: Int, y: Int): Color {
-            return "#000000"
-        }
-    }
-
-    object FilledCell : CellType() {
-        override fun getColor(x: Int, y: Int): Color {
-            return "#000000"
-        }
-    }
+    object EmptyCell : CellType()
+    object FilledCell : CellType()
 
     private val rule = CustomPatternRule(
         mapOf(

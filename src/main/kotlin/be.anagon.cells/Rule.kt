@@ -1,8 +1,10 @@
 package be.anagon.cells
 
-import be.anagon.cells.CellType
-import be.anagon.cells.Position
-
 abstract class Rule {
+    val id = nextId++
     abstract fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType>
+
+    companion object {
+        var nextId = 1
+    }
 }

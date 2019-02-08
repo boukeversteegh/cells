@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './RuleDetails.css';
-import Events from "./Events";
 
 import Core from "./Core"
 
@@ -13,18 +12,14 @@ class RuleDetails extends Component {
             name: null,
         };
 
-        props.events.on(Events.RULE_SELECTED, rule => {
-            this.loadRule(rule);
-        });
-
-        props.events.on(Events.RULE_UPDATED, rule => {
-            if (rule === this.state.rule) {
-                this.loadRule(rule);
-            }
-        });
-
         this.onChangeName = this.onChangeName.bind(this);
         this.onChangeRotatable = this.onChangeRotatable.bind(this);
+    }
+
+    componentDidMount() {
+        this.props.app.Rules.onChange(rules => this.setState({rules: rules}));
+        this.props.app.Rules.onSelect(rule => this.loadRule(rule));
+        this.props.app.Rules.onUpdate(rule => this.loadRule(rule));
     }
 
     loadRule(rule) {
@@ -37,13 +32,12 @@ class RuleDetails extends Component {
 
     onChangeName(event) {
         this.state.rule.name = event.target.value;
-        this.props.events.trigger(Events.RULE_UPDATED, this.state.rule);
+        this.props.app.Rules.doUpdate(this.state.rule);
     }
 
     onChangeRotatable(event) {
-        console.log(event.target.checked);
         this.state.rule.rotatable = event.target.checked;
-        this.props.events.trigger(Events.RULE_UPDATED, this.state.rule);
+        this.props.app.Rules.doUpdate(this.state.rule);
     }
 
     render() {
@@ -53,7 +47,6 @@ class RuleDetails extends Component {
         let isCustomPatternRule = (rule instanceof Core.CustomPatternRule);
 
         if (rule) {
-            console.log(rule);
             return <div id="rule-details">
                 <input type="text" value={name} onChange={this.onChangeName}
                        readOnly={!isCustomPatternRule}/>
@@ -66,9 +59,10 @@ class RuleDetails extends Component {
                         readOnly={!isCustomPatternRule}
                     /></label>
                 }
-                <button onClick={() => {
-                    this.props.events.trigger(Events.RULE_DELETED, rule)
-                }}>Delete Rule
+                <button
+                    onClick={() => this.props.app.Rules.delete(rule)}
+                >
+                    Delete Rule
                 </button>
             </div>
         } else {

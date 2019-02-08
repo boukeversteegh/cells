@@ -11,13 +11,15 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        let automaton = Core.init();
+        let app = Core.init();
+        let automaton = app.automaton;
         let layer = automaton.getLayers()[0];
 
         let events = new Events();
         this.state = {
             layer: layer,
             automaton: automaton,
+            app: app,
             events: events,
             selectedRule: null,
             rulePaint: false,
@@ -45,7 +47,7 @@ class App extends Component {
         });
 
         events.on(Events.CELL_TYPES_CHANGED, cellTypes => {
-            this.state.events.trigger(Events.CELL_TYPE_SELECTED, cellTypes[0]);
+            this.state.app.CellTypes.select(cellTypes[0]);
         });
 
         events.on(Events.LAYER_CHANGED, layer => {
@@ -56,6 +58,10 @@ class App extends Component {
 
     componentDidMount() {
         this.state.events.trigger(Events.LAYER_CHANGED, this.state.layer);
+
+        this.state.app.CellTypes.onSelect(cellType => this.setState({
+            selectedCellType: cellType
+        }))
     }
 
     render() {
@@ -75,6 +81,9 @@ class App extends Component {
                     onSelectRule={(rule) => {
                         this.setState({selectedRule: rule});
                     }}
+                    // ruleTypes={this.state.app.getRuleTypes()}
+                    app={this.state.app}
+
                 />
                 <div style={{
                     flexDirection: "row",
@@ -85,6 +94,7 @@ class App extends Component {
                 }}>
                     <RuleDetails
                         events={this.state.events}
+                        app={this.state.app}
                     />
                     <Screen
                         width={this.state.automaton.w}
@@ -97,7 +107,6 @@ class App extends Component {
                             } else {
                                 let c = this.state.layer.get(x, y);
                                 let rule = this.state.layer.addRule();
-                                console.log(rule);
 
                                 rule.setInput(-1, -1, this.state.layer.get(x - 1, y - 1));
                                 rule.setInput(0, -1, this.state.layer.get(x, y - 1));

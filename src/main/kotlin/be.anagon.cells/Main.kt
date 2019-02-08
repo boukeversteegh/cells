@@ -1,15 +1,17 @@
 package be.anagon.cells
 
 @JsName("init")
-fun init(): Automaton {
+fun init(): App {
     val automaton = Automaton(64, 48)
+//    val automaton = Automaton(128, 96)
 
     val above = pos(0, -1)
     val below = pos(0, 1)
     val center = pos(0, 0)
 
     val l1 = automaton.addLayer()
-//    l1.rules.add(ElectricityRule())
+    l1.rules.add(ElectricityRule())
+    l1.rules.add(RandomWalkRule())
 
     l1.rules.add(WaterOverflowRule())
     l1.rules.add(WaterRule())
@@ -54,6 +56,7 @@ fun init(): Automaton {
     l1.cellTypes.add(ElectricityRule.Wire)
     l1.cellTypes.add(ElectricityRule.PoweredWire)
     l1.cellTypes.add(ElectricityRule.ClearWire)
+    l1.cellTypes.add(RandomWalkRule.Walker)
 
     fun waterWorld() {
         l1.set(10, 3, Water.Source)
@@ -67,5 +70,7 @@ fun init(): Automaton {
 
     waterWorld()
 
-    return automaton
+    val app = App(automaton)
+
+    return app
 }
