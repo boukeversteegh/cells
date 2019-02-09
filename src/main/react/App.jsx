@@ -21,15 +21,8 @@ class App extends Component {
             automaton: automaton,
             app: app,
             events: events,
-            selectedRule: null,
             rulePaint: false,
         };
-
-        // Reducers
-        events.on(Events.RULE_SELECTED, (rule) => {
-            console.log("RuleDetails", "Some rule was selected", rule);
-            this.setState({selectedRule: rule});
-        });
 
         events.on(Events.CELL_TYPES_CHANGED, cellTypes => {
             this.state.app.CellTypes.select(cellTypes[0]);
@@ -37,7 +30,6 @@ class App extends Component {
 
         events.on(Events.LAYER_CHANGED, layer => {
             this.state.events.trigger(Events.CELL_TYPES_CHANGED, layer.getCellTypes());
-            this.state.events.trigger(Events.RULES_CHANGED, layer.getRules());
         });
     }
 
@@ -63,10 +55,6 @@ class App extends Component {
                     onAddCellType={() => {
                         this.state.layer.addCellType();
                     }}
-                    onSelectRule={(rule) => {
-                        this.setState({selectedRule: rule});
-                    }}
-                    // ruleTypes={this.state.app.getRuleTypes()}
                     app={this.state.app}
 
                 />

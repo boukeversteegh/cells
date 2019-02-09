@@ -13,7 +13,6 @@ class ToolBar extends Component {
         this.state = {
             layer: props.layer,
             cellTypes: props.cellTypes,
-            mapper: new Core.JsonMapper(),
             layerState: '',
         };
     }
@@ -30,7 +29,7 @@ class ToolBar extends Component {
     }
 
     save() {
-        let layerState = this.state.mapper.mapLayer(this.state.layer);
+        let layerState = new Core.JsonMapper().mapLayer(this.state.layer);
         this.setState({
             layerState: JSON.stringify(layerState)
         });
@@ -40,7 +39,8 @@ class ToolBar extends Component {
         let layerState = prompt("Paste here", "");
 
         if (layerState) {
-            this.state.mapper.loadLayer(this.state.layer, JSON.parse(layerState));
+            this.props.app.Layers.load(JSON.parse(layerState));
+            // this.state.mapper.loadLayer(this.state.layer, JSON.parse(layerState));
             this.props.events.trigger(Events.LAYER_CHANGED, this.state.layer);
         }
     }

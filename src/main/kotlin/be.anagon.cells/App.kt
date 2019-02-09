@@ -1,8 +1,11 @@
 package be.anagon.cells
 
+import kotlin.js.Json
+
 class App(val automaton: Automaton) {
     val Rules = RulesController()
-    val layer = automaton.layers[0]
+    val layer: Layer
+        get() = automaton.layers[0]
 
     class Observable<T>(private var initialValue: T, private val triggerOnListen: Boolean) {
         private val listeners = mutableListOf<(T) -> Unit>()
@@ -16,18 +19,21 @@ class App(val automaton: Automaton) {
             }
         }
 
-        fun set(value: T) {
+        fun push(value: T) {
             this.initialValue = value
             listeners.forEach { it.invoke(value) }
         }
     }
 
     inner class RulesController {
+        val changes = Observable(layer.rules.toTypedArray(), true)
+
         private val changeListeners = mutableListOf<(Array<IRule>) -> Unit>()
-        private val selectListeners = mutableListOf<(IRule?) -> Unit>()
         private val updateListeners = mutableListOf<(IRule) -> Unit>()
 
-        var selected: IRule? = null
+        @Suppress("unused")
+        @JsName("selected")
+        val selected = Observable<IRule?>(null, true)
 
         val types = listOf(
             EditablePatternRule,
@@ -44,6 +50,7 @@ class App(val automaton: Automaton) {
 
         private val rules: MutableList<IRule> = automaton.layers[0].rules
 
+        @Suppress("unused")
         @JsName("getTypes")
         fun getTypes() = types
 
@@ -67,12 +74,6 @@ class App(val automaton: Automaton) {
             return EditablePatternRule.new()
         }
 
-        @JsName("onChange")
-        fun onChange(listener: (Array<IRule>) -> Unit) {
-            changeListeners += listener
-            listener(rules.toTypedArray())
-        }
-
         @JsName("onUpdate")
         fun onUpdate(listener: (IRule) -> Unit) {
             updateListeners += listener
@@ -84,27 +85,13 @@ class App(val automaton: Automaton) {
             layer.refresh()
         }
 
-        @JsName("onSelect")
-        fun onSelect(listener: (IRule?) -> Unit) {
-            selectListeners += listener
-            listener(selected)
-        }
-
-        private fun doSelect() {
-            selectListeners.forEach { it(selected) }
-        }
-
         @JsName("select")
-        fun select(rule: IRule?) {
-            selected = rule
-            doSelect()
-        }
-
+        fun select(rule: IRule?) = selected.push(rule)
 
         @JsName("clear")
         fun clear() {
             rules.clear()
-            select(null)
+            selected.push(null)
             doChange()
         }
 
@@ -112,7 +99,7 @@ class App(val automaton: Automaton) {
         fun delete(rule: IRule) {
             val index = rules.indexOf(rule)
             rules.remove(rule)
-            select(rules.getOrNull(index))
+            selected.push(rules.getOrNull(index))
             doChange()
         }
 
@@ -122,20 +109,19 @@ class App(val automaton: Automaton) {
             doUpdate(rule)
         }
 
-        private fun doChange() {
-            val rules = rules.toTypedArray()
-            changeListeners.forEach { it(rules) }
-        }
+        internal fun doChange() = changes.push(rules.toTypedArray())
     }
 
     @Suppress("unused")
-    val CellTypes = object {
+    val CellTypes = CellTypesController()
+
+    inner class CellTypesController {
         val selected = Observable<CellType>(initialValue = Dirt, triggerOnListen = true)
 
         @JsName("select")
         @Suppress("unused")
         fun select(cellType: CellType) {
-            selected.set(cellType)
+            selected.push(cellType)
         }
     }
 
@@ -163,6 +149,16 @@ class App(val automaton: Automaton) {
         fun setBackground(rule: RandomWalkRule, cellType: CellType) {
             rule.background = cellType
             Rules.doUpdate(rule)
+        }
+    }
+
+
+    @Suppress("unused")
+    val Layers = object {
+        @JsName("load")
+        fun load(layerState: Json) {
+            JsonMapper().fromJson(layer, layerState)
+            Rules.doChange()
         }
     }
 }

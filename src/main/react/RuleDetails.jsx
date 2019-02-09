@@ -19,8 +19,8 @@ class RuleDetails extends Component {
     }
 
     componentDidMount() {
-        this.props.app.Rules.onChange(rules => this.setState({rules: rules}));
-        this.props.app.Rules.onSelect(rule => this.loadRule(rule));
+        this.props.app.Rules.changes.observe(rules => this.setState({rules: rules}));
+        this.props.app.Rules.selected.observe(rule => this.loadRule(rule));
         this.props.app.Rules.onUpdate(rule => this.loadRule(rule));
     }
 

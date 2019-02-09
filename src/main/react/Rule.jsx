@@ -13,7 +13,7 @@ class Rule extends Component {
     }
 
     componentDidMount() {
-        this.props.app.Rules.onSelect(rule => this.setState({
+        this.props.app.Rules.selected.observe(rule => this.setState({
             selected: (rule === this.props.rule)
         }));
 

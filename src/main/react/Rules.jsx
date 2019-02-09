@@ -8,13 +8,12 @@ class Rules extends Component {
         super(props);
         this.state = {
             selectedCellType: null,
-            selectedType: props.app.Rules.getTypes()[0].key,
             rules: [],
         };
     }
 
     componentDidMount() {
-        this.props.app.Rules.onChange(rules => this.setState({
+        this.props.app.Rules.changes.observe(rules => this.setState({
             rules: rules
         }));
 
@@ -31,13 +30,16 @@ class Rules extends Component {
         let rules = this.state.rules;
         let self = this;
         let app = this.props.app;
-        let Rules = app.Rules;
 
         return <div id="rules">
             {
             rules.map(function (rule) {
-                return <Rule app={app} key={rule.id} rule={rule} events={self.props.events}
-                             selectedCellType={self.state.selectedCellType}/>;
+                return <Rule
+                    key={rule.id} // react key
+                    app={app}
+                    rule={rule}
+                    selectedCellType={self.state.selectedCellType}
+                />;
             })
         }
 
