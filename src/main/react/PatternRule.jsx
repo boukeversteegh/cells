@@ -10,18 +10,16 @@ class PatternRule extends Component {
         this.state = {
             selectedCellType: null,
         };
-
     }
 
     componentDidMount() {
-        this.props.app.CellTypes.onSelect(cellType => this.setState({selectedCellType: cellType}))
+        this.props.app.CellTypes.selected.observe(cellType => this.setState({selectedCellType: cellType}))
         this.props.app.Rules.onUpdate(rule => {
             if (rule === this.props.rule) {
                 this.forceUpdate();
             }
         })
     }
-
 
     clickInputCell(x, y) {
         if (this.isEditable()) {

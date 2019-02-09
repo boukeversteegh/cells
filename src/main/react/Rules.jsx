@@ -18,7 +18,7 @@ class Rules extends Component {
             rules: rules
         }));
 
-        this.props.app.CellTypes.onSelect(cellType => this.setState({
+        this.props.app.CellTypes.selected.observe(cellType => this.setState({
             selectedCellType: cellType
         }));
     }

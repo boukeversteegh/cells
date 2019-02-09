@@ -21,14 +21,10 @@ class CellTypes extends Component {
         props.events.on(Events.LAYER_CHANGED, layer => {
             this.setState({layer: layer});
         });
-
-        props.events.on(Events.CELL_TYPE_SELECTED, cellType => {
-            this.setState({selectedCellType: cellType})
-        });
     }
 
     componentDidMount() {
-        this.props.app.CellTypes.onSelect(cellType => this.setState({
+        this.props.app.CellTypes.selected.observe(cellType => this.setState({
             selectedCellType: cellType
         }))
     }

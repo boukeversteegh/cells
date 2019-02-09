@@ -1,15 +1,32 @@
 package be.anagon.cells
 
-import kotlin.Any
-
 class App(val automaton: Automaton) {
     val Rules = RulesController()
     val layer = automaton.layers[0]
+
+    class Observable<T>(private var initialValue: T, private val triggerOnListen: Boolean) {
+        private val listeners = mutableListOf<(T) -> Unit>()
+
+        @JsName("observe")
+        @Suppress("unused")
+        fun observe(listener: (T) -> Unit) {
+            listeners += listener
+            if (triggerOnListen) {
+                listener.invoke(initialValue)
+            }
+        }
+
+        fun set(value: T) {
+            this.initialValue = value
+            listeners.forEach { it.invoke(value) }
+        }
+    }
 
     inner class RulesController {
         private val changeListeners = mutableListOf<(Array<IRule>) -> Unit>()
         private val selectListeners = mutableListOf<(IRule?) -> Unit>()
         private val updateListeners = mutableListOf<(IRule) -> Unit>()
+
         var selected: IRule? = null
 
         val types = listOf(
@@ -111,25 +128,14 @@ class App(val automaton: Automaton) {
         }
     }
 
+    @Suppress("unused")
     val CellTypes = object {
-        var selected: CellType = Dirt
-
-        val onSelectListeners = mutableListOf<(CellType) -> Unit>()
+        val selected = Observable<CellType>(initialValue = Dirt, triggerOnListen = true)
 
         @JsName("select")
+        @Suppress("unused")
         fun select(cellType: CellType) {
-            selected = cellType
-            doSelect()
-        }
-
-        @JsName("onSelect")
-        fun onSelect(listener: (CellType) -> Unit) {
-            onSelectListeners += listener
-            listener(selected)
-        }
-
-        private fun doSelect() {
-            onSelectListeners.forEach { it(selected) }
+            selected.set(cellType)
         }
     }
 

@@ -31,10 +31,6 @@ class App extends Component {
             this.setState({selectedRule: rule});
         });
 
-        events.on(Events.CELL_TYPE_SELECTED, cellType => {
-            this.setState({selectedCellType: cellType});
-        });
-
         events.on(Events.CELL_TYPES_CHANGED, cellTypes => {
             this.state.app.CellTypes.select(cellTypes[0]);
         });
@@ -48,7 +44,7 @@ class App extends Component {
     componentDidMount() {
         this.state.events.trigger(Events.LAYER_CHANGED, this.state.layer);
 
-        this.state.app.CellTypes.onSelect(cellType => this.setState({
+        this.state.app.CellTypes.selected.observe(cellType => this.setState({
             selectedCellType: cellType
         }))
     }
