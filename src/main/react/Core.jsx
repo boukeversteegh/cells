@@ -1,7 +1,7 @@
 import cells from "../../build/cells";
-class Core {
-    CustomPatternRule = null;
-    PatternRule = null;
-}
+// class Core {
+//     EditablePatternRule = null;
+//     PatternRule = null;
+// }
 
 export default cells.be.anagon.cells;

@@ -1,22 +1,24 @@
 package be.anagon.cells
 
-import kotlin.Any
-
 class App(val automaton: Automaton) {
-    val Rules = object {
+    val Rules = RulesController()
+
+    inner class RulesController {
         val changeListeners = mutableListOf<(Array<Rule>) -> Unit>()
         val selectListeners = mutableListOf<(Rule?) -> Unit>()
         val updateListeners = mutableListOf<(Rule) -> Unit>()
         var selected: Rule? = null
 
         val types = listOf(
-            CustomPatternRule,
-            RandomWalkRule
+            EditablePatternRule,
+            RandomWalkRule,
+            ElectricityRule
         ).toTypedArray()
 
         val typesByKey = mapOf<String, () -> Rule>(
-            CustomPatternRule.key to { CustomPatternRule.new() },
-            RandomWalkRule.key to { RandomWalkRule.new() }
+            EditablePatternRule.key to { EditablePatternRule.new() },
+            RandomWalkRule.key to { RandomWalkRule.new() },
+            ElectricityRule.key to { ElectricityRule() }
         )
 
         private val rules = automaton.layers[0].rules
@@ -40,8 +42,8 @@ class App(val automaton: Automaton) {
         }
 
         @JsName("newPatternRule")
-        fun newPatternRule(): CustomPatternRule {
-            return CustomPatternRule.new()
+        fun newPatternRule(): EditablePatternRule {
+            return EditablePatternRule.new()
         }
 
         @JsName("onChange")
@@ -56,7 +58,6 @@ class App(val automaton: Automaton) {
         }
 
         @JsName("doUpdate")
-        @Deprecated("only allow changing rules through App class", ReplaceWith("App.Rules.___"))
         fun doUpdate(rule: Rule) {
             updateListeners.forEach { it(rule) }
         }
@@ -117,6 +118,20 @@ class App(val automaton: Automaton) {
 
         private fun doSelect() {
             onSelectListeners.forEach { it(selected) }
+        }
+    }
+
+    val EditablePatternRules = object {
+        @JsName("setInput")
+        fun setInput(rule: EditablePatternRule, position: Position, cellType: CellType) {
+            rule.setInput(position.x, position.y, cellType)
+            Rules.doUpdate(rule)
+        }
+
+        @JsName("setOutput")
+        fun setOutput(rule: EditablePatternRule, position: Position, cellType: CellType) {
+            rule.setOutput(position.x, position.y, cellType)
+            Rules.doUpdate(rule)
         }
     }
 }

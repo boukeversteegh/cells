@@ -18,25 +18,29 @@ fun init(): App {
      l1.rules.add(GameOfLife())
 
 //     generate spread on dirt
-    l1.rules.add(CustomPatternRule(
+    l1.rules.add(
+        EditablePatternRule(
         mapOf(center to Water.Down, below to Dirt),
         mapOf(center to Water.Spread)
     ))
 
     // generate down
-    l1.rules.add(CustomPatternRule(
+    l1.rules.add(
+        EditablePatternRule(
         mapOf(above to Water.Source, center to None),
         mapOf(center to Water.Down))
     )
 
     // propagate down
-    l1.rules.add(CustomPatternRule(
+    l1.rules.add(
+        EditablePatternRule(
         mapOf(above to Water.Down, center to None),
         mapOf(center to Water.Down))
     )
 
 //     generate spread
-    l1.rules.add(CustomPatternRule(
+    l1.rules.add(
+        EditablePatternRule(
         mapOf(center to Water.Down, below to Water.Still),
         mapOf(center to Water.Spread))
     )

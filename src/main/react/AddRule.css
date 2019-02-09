@@ -1,3 +1,7 @@
 #add-rule {
     display: inline-block;
 }
+
+#add-rule select {
+    vertical-align: top;
+}

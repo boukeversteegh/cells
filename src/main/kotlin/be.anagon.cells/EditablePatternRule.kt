@@ -5,7 +5,7 @@ import kotlin.js.json
 
 typealias MutablePatternMap = MutableMap<Position, CellType>
 
-class CustomPatternRule(
+class EditablePatternRule(
     override val input: MutablePatternMap,
     override val output: MutablePatternMap
 ) : PatternRule(), SerializableRule, NamedRule {
@@ -13,13 +13,15 @@ class CustomPatternRule(
 
     override val key = Companion.key
 
-    override var name = "Custom Rule"
+    override var name = "Pattern Rule"
+
+    override fun isEditable() = true
 
     companion object {
         const val key = "CustomPatternRule"
 
         @JsName("new")
-        fun new() = CustomPatternRule(emptyMap(), emptyMap())
+        fun new() = EditablePatternRule(emptyMap(), emptyMap())
 
         fun toJson(positions: Map<Position, CellType>, cellTypes: List<CellType>): Array<Json> {
             return positions.map {
@@ -30,7 +32,7 @@ class CustomPatternRule(
             }.toTypedArray()
         }
 
-        fun deserialize(ruleState: Json, cellTypes: List<CellType>): CustomPatternRule {
+        fun deserialize(ruleState: Json, cellTypes: List<CellType>): EditablePatternRule {
             fun mapPattern(patternState: Array<Json>): Map<Position, CellType> {
                 return patternState.map {
                     val x = it["position"].unsafeCast<Json>()["x"].unsafeCast<Int>()
@@ -45,7 +47,7 @@ class CustomPatternRule(
             val input = mapPattern(inputState)
             val output = mapPattern(outputState)
 
-            val rule = CustomPatternRule(input, output)
+            val rule = EditablePatternRule(input, output)
 
             val name = ruleState["name"].unsafeCast<String?>()
             if (name != null) {

@@ -40,7 +40,7 @@ class JsonMapper {
 
         val rulesState: Array<Json> = layerState["rules"].unsafeCast<Array<Json>>()
         val ruleTypes = mapOf<String, (Json) -> Rule>(
-            CustomPatternRule.key to { it -> CustomPatternRule.deserialize(it, layer.cellTypes) },
+            EditablePatternRule.key to { it -> EditablePatternRule.deserialize(it, layer.cellTypes) },
             ElectricityRule.key to { _ -> ElectricityRule.deserialize() }
         )
 

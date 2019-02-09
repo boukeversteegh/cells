@@ -3,7 +3,6 @@ import './AddRule.css';
 
 class AddRule extends Component {
     constructor(props) {
-        console.log("Construct Rules");
         super(props);
         this.state = {
             selectedType: props.app.Rules.getTypes()[0].key,

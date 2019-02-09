@@ -4,7 +4,7 @@ import './Rules.css';
 
 class Rules extends Component {
     constructor(props) {
-        console.log("Construct Rules");
+        console.log("Construct Rules", props);
         super(props);
         this.state = {
             selectedCellType: null,

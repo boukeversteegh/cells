@@ -3,6 +3,11 @@ import './RuleDetails.css';
 
 import Core from "./Core"
 
+
+
+
+import Cells from "../../build/cells";
+
 class RuleDetails extends Component {
     constructor(props) {
         super(props);
@@ -44,7 +49,7 @@ class RuleDetails extends Component {
         let rule = this.state.rule;
         let name = this.state.name;
         let rotatable = this.state.rotatable;
-        let isCustomPatternRule = (rule instanceof Core.CustomPatternRule);
+        let isCustomPatternRule = (rule instanceof Core.EditablePatternRule);
 
         if (rule) {
             return <div id="rule-details">

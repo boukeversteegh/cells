@@ -1,6 +1,8 @@
 package be.anagon.cells
 
-class GameOfLife(private val aliveCellType: CellType = Alive) : Rule() {
+class GameOfLife(private val aliveCellType: CellType = Alive) : Rule(), NamedRule {
+
+    override val name = "Game of Life"
 
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         val c = neighbors[position]

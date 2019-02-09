@@ -66,8 +66,8 @@ class Layer(private val w: Int, private val h: Int) {
     }
 
     @JsName("addRule")
-    fun addRule(): CustomPatternRule {
-        val rule = CustomPatternRule(emptyMap(), emptyMap())
+    fun addRule(): EditablePatternRule {
+        val rule = EditablePatternRule(emptyMap(), emptyMap())
         addRule(rule)
         return rule
     }

@@ -6,7 +6,7 @@ class PatternRuleTest {
     object EmptyCell : CellType()
     object FilledCell : CellType()
 
-    private val rule = CustomPatternRule(
+    private val rule = EditablePatternRule(
         mapOf(
             Position(0, 0) to FilledCell,
             Position(0, 1) to EmptyCell

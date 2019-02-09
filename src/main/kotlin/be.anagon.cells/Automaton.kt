@@ -15,6 +15,7 @@ data class Position(val x: Int, val y: Int) {
     fun serialize(): Json = json("x" to x, "y" to y)
 }
 
+@JsName("pos")
 fun pos(x: Int, y: Int): Position {
     return Position(x, y)
 }
