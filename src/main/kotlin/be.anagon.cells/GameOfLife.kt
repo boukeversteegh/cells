@@ -4,6 +4,12 @@ class GameOfLife(private val aliveCellType: CellType = Alive) : Rule(), NamedRul
 
     override val name = "Game of Life"
 
+    override val key = Companion.key
+
+    companion object {
+        const val key = "GameOfLife"
+    }
+
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         val c = neighbors[position]
 

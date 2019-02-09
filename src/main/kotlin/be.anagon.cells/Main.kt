@@ -10,12 +10,8 @@ fun init(): App {
     val center = pos(0, 0)
 
     val l1 = automaton.addLayer()
-    l1.rules.add(ElectricityRule())
-    l1.rules.add(RandomWalkRule())
-
     l1.rules.add(WaterOverflowRule())
     l1.rules.add(WaterRule())
-     l1.rules.add(GameOfLife())
 
 //     generate spread on dirt
     l1.rules.add(
@@ -60,7 +56,6 @@ fun init(): App {
     l1.cellTypes.add(ElectricityRule.Wire)
     l1.cellTypes.add(ElectricityRule.PoweredWire)
     l1.cellTypes.add(ElectricityRule.ClearWire)
-    l1.cellTypes.add(RandomWalkRule.Walker)
 
     fun waterWorld() {
         l1.set(10, 3, Water.Source)
@@ -74,7 +69,5 @@ fun init(): App {
 
     waterWorld()
 
-    val app = App(automaton)
-
-    return app
+    return App(automaton)
 }

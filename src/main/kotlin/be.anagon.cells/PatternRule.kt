@@ -36,18 +36,20 @@ abstract class PatternRule : Rule() {
 
         val relativeNeighbors = neighbors.relativeTo(position)
 
-        if (input.matches(relativeNeighbors)) {
-            changes.putAll(position + output)
-        }
+        if (input.isNotEmpty()) {
+            if (input.matches(relativeNeighbors)) {
+                changes.putAll(position + output)
+            }
 
-        if (rotatable) {
-            var rotatedInput = input
-            var rotatedOutput = output
-            repeat(3) {
-                rotatedInput = rotatedInput.rotateRight()
-                rotatedOutput = rotatedOutput.rotateRight()
-                if (rotatedInput.matches(relativeNeighbors)) {
-                    changes.putAll(position + rotatedOutput)
+            if (rotatable) {
+                var rotatedInput = input
+                var rotatedOutput = output
+                repeat(3) {
+                    rotatedInput = rotatedInput.rotateRight()
+                    rotatedOutput = rotatedOutput.rotateRight()
+                    if (rotatedInput.matches(relativeNeighbors)) {
+                        changes.putAll(position + rotatedOutput)
+                    }
                 }
             }
         }

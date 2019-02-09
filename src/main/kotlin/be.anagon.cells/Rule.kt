@@ -3,6 +3,8 @@ package be.anagon.cells
 
 interface IRule {
     val id: Int
+    val key: String
+
     fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType>
 
     @JsName("isEditable")

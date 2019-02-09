@@ -1,7 +1,9 @@
 package be.anagon.cells
 
 // @todo serialize
-class WaterOverflowRule : Rule() {
+class WaterOverflowRule : Rule(), NamedRule {
+    override val name = "WaterOverflowRule"
+    override val key = "WaterOverflowRule"
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         val c = neighbors[position]
 

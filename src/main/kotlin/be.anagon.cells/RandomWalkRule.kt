@@ -4,15 +4,11 @@ import kotlin.js.Json
 import kotlin.js.json
 
 class RandomWalkRule : Rule(), NamedRule, SerializableRule {
-    object Walker : CellType() {
-        override fun getColor(x: Int, y: Int) = "#9A6091"
-    }
-
-    var cellType: CellType = Walker
+    var cellType: CellType = Any
     var background: CellType = None
 
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
-        if (neighbors[position] == cellType) {
+        if (cellType != Any && neighbors[position] == cellType) {
             val randomDirection = listOf(position.above, position.below, position.left, position.right).random()
             if (neighbors[randomDirection] == background) {
                 return mapOf(

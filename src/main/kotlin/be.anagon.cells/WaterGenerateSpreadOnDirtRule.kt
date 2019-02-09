@@ -1,6 +1,7 @@
 package be.anagon.cells
 
 class WaterGenerateSpreadOnDirtRule : PatternRule() {
+    override val key = "WaterGenerateSpreadOnDirtRule"
     override val rotatable = false
 
     override val input: Map<Position, CellType> = mapOf(

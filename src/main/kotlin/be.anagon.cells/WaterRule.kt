@@ -1,6 +1,9 @@
 package be.anagon.cells
 
-class WaterRule : Rule() {
+class WaterRule : Rule(), NamedRule {
+    override val key = "WaterRule"
+    override val name = "WaterRule"
+
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         val c = neighbors[position]
 

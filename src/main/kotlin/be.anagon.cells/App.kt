@@ -21,7 +21,8 @@ class App(val automaton: Automaton) {
         val typesByKey = mapOf<String, () -> Rule>(
             EditablePatternRule.key to { EditablePatternRule.new() },
             RandomWalkRule.key to { RandomWalkRule.new() },
-            ElectricityRule.key to { ElectricityRule() }
+            ElectricityRule.key to { ElectricityRule() },
+            GameOfLife.key to { GameOfLife() }
         )
 
         private val rules: MutableList<IRule> = automaton.layers[0].rules
@@ -86,6 +87,7 @@ class App(val automaton: Automaton) {
         @JsName("clear")
         fun clear() {
             rules.clear()
+            select(null)
             doChange()
         }
 
