@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Events from "./Events";
 import Rule from "./Rule";
 import './Rules.css';
 
@@ -9,6 +8,7 @@ class Rules extends Component {
         super(props);
         this.state = {
             selectedCellType: null,
+            selectedType: props.app.Rules.getTypes()[0].key,
             rules: [],
         };
     }
@@ -23,31 +23,25 @@ class Rules extends Component {
         }));
     }
 
+    componentWillUnmount() {
+        // @todo remove event listeners
+    }
+
     render() {
         let rules = this.state.rules;
         let self = this;
         let app = this.props.app;
         let Rules = app.Rules;
 
-        return (<div id="rules">{
+        return <div id="rules">
+            {
             rules.map(function (rule) {
-                return <Rule app={app} key={rule.id} rule={rule} events={self.props.events} selectedCellType={self.state.selectedCellType}/>;
+                return <Rule app={app} key={rule.id} rule={rule} events={self.props.events}
+                             selectedCellType={self.state.selectedCellType}/>;
             })
         }
-            {
-                Rules.getTypes().map(ruleType => {
-                    return <button key={ruleType.key} onClick={() => {
-                        app.Rules.addRule(ruleType.new());
-                        this.props.events.trigger(Events.RULES_CHANGED, this.props.layer.getRules())
-                    }}>Add {ruleType.key}</button>
-                })
-            }
 
-            <button onClick={() => {
-                this.props.layer.addRule();
-                this.props.events.trigger(Events.RULES_CHANGED, this.props.layer.getRules())
-            }}>➕</button>
-        </div>)
+        </div>
     }
 }
 

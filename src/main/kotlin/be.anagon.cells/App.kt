@@ -1,5 +1,7 @@
 package be.anagon.cells
 
+import kotlin.Any
+
 class App(val automaton: Automaton) {
     val Rules = object {
         val changeListeners = mutableListOf<(Array<Rule>) -> Unit>()
@@ -12,6 +14,11 @@ class App(val automaton: Automaton) {
             RandomWalkRule
         ).toTypedArray()
 
+        val typesByKey = mapOf<String, () -> Rule>(
+            CustomPatternRule.key to { CustomPatternRule.new() },
+            RandomWalkRule.key to { RandomWalkRule.new() }
+        )
+
         private val rules = automaton.layers[0].rules
 
         @JsName("getTypes")
@@ -21,6 +28,20 @@ class App(val automaton: Automaton) {
         fun addRule(rule: Rule) {
             automaton.layers[0].addRule(rule)
             doChange()
+        }
+
+        @JsName("addByKey")
+        fun addByKey(key: String) {
+            val factory = typesByKey[key]
+
+            if (factory != null) {
+                addRule(factory.invoke())
+            }
+        }
+
+        @JsName("newPatternRule")
+        fun newPatternRule(): CustomPatternRule {
+            return CustomPatternRule.new()
         }
 
         @JsName("onChange")
@@ -46,7 +67,7 @@ class App(val automaton: Automaton) {
             listener(selected)
         }
 
-        fun doSelect() {
+        private fun doSelect() {
             selectListeners.forEach { it(selected) }
         }
 
@@ -71,7 +92,7 @@ class App(val automaton: Automaton) {
             doChange()
         }
 
-        fun doChange() {
+        private fun doChange() {
             val rules = rules.toTypedArray()
             changeListeners.forEach { it(rules) }
         }
@@ -94,7 +115,7 @@ class App(val automaton: Automaton) {
             listener(selected)
         }
 
-        fun doSelect() {
+        private fun doSelect() {
             onSelectListeners.forEach { it(selected) }
         }
     }

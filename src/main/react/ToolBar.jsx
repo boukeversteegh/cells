@@ -4,6 +4,7 @@ import Rules from "./Rules";
 import Events from "./Events";
 
 import Core from "./Core"
+import AddRule from "./AddRule";
 
 class ToolBar extends Component {
     constructor(props) {
@@ -72,6 +73,8 @@ class ToolBar extends Component {
                     this.clearScreen()
                 }}>Clear Screen
                 </button>
+                <AddRule app={this.props.app}/>
+
             </div>
             <input
                 hidden={this.state.layerState === ""}

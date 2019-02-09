@@ -1,6 +1,6 @@
 .rule {
     background: grey;
-    float: left;
+    display: inline-block;
     min-height: 96px;
     width: 96px;
     border: 4px solid black;
@@ -9,7 +9,6 @@
 
 
 .rule[data-selected="1"] {
-    overflow: hidden;
     outline: magenta 1px solid;
 }
 

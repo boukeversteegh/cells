@@ -30,13 +30,6 @@ class App extends Component {
             console.log("RuleDetails", "Some rule was selected", rule);
             this.setState({selectedRule: rule});
         });
-        events.on(Events.RULE_DELETED, (rule) => {
-            layer.deleteRule(rule);
-            events.trigger(Events.RULES_CHANGED, layer.getRules());
-            if (this.state.selectedRule === rule) {
-                events.trigger(Events.RULE_SELECTED, null);
-            }
-        });
 
         events.on(Events.RULE_UPDATED, (rule) => {
             layer.ruleUpdated();
@@ -105,8 +98,7 @@ class App extends Component {
                             if (!this.state.rulePaint) {
                                 this.state.layer.set(x, y, this.state.selectedCellType);
                             } else {
-                                let c = this.state.layer.get(x, y);
-                                let rule = this.state.layer.addRule();
+                                let rule = this.state.app.Rules.newPatternRule();
 
                                 rule.setInput(-1, -1, this.state.layer.get(x - 1, y - 1));
                                 rule.setInput(0, -1, this.state.layer.get(x, y - 1));
@@ -119,8 +111,8 @@ class App extends Component {
                                 rule.setInput(1, 1, this.state.layer.get(x + 1, y + 1));
 
                                 rule.setOutput(0, 0, this.state.selectedCellType);
-                                this.state.events.trigger(Events.RULES_CHANGED, this.state.layer.getRules());
-                                // console.log()
+
+                                this.state.app.Rules.addRule(rule);
                             }
                         }}
                     />
