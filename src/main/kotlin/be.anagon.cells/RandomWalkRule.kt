@@ -5,13 +5,11 @@ import kotlin.js.json
 
 class RandomWalkRule : Rule(), NamedRule, SerializableRule {
     object Walker : CellType() {
-        override fun getColor(x: Int, y: Int): Color {
-            return "#9A6091"
-        }
+        override fun getColor(x: Int, y: Int) = "#9A6091"
     }
 
-    val cellType = Walker
-    private val background = None
+    var cellType: CellType = Walker
+    var background: CellType = None
 
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         if (neighbors[position] == cellType) {
@@ -19,7 +17,7 @@ class RandomWalkRule : Rule(), NamedRule, SerializableRule {
             if (neighbors[randomDirection] == background) {
                 return mapOf(
                     position to background,
-                    (randomDirection) to cellType
+                    randomDirection to cellType
                 )
             }
             return mapOf(position to cellType)

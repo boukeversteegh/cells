@@ -1,4 +1,5 @@
 #rules {
     clear: both;
-    min-height: 232px;
+    /*min-height: 232px;*/
+    display: flex;
 }

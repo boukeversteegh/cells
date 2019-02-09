@@ -1,13 +1,16 @@
 package be.anagon.cells
 
+import kotlin.Any
+
 class App(val automaton: Automaton) {
     val Rules = RulesController()
+    val layer = automaton.layers[0]
 
     inner class RulesController {
-        val changeListeners = mutableListOf<(Array<Rule>) -> Unit>()
-        val selectListeners = mutableListOf<(Rule?) -> Unit>()
-        val updateListeners = mutableListOf<(Rule) -> Unit>()
-        var selected: Rule? = null
+        private val changeListeners = mutableListOf<(Array<IRule>) -> Unit>()
+        private val selectListeners = mutableListOf<(IRule?) -> Unit>()
+        private val updateListeners = mutableListOf<(IRule) -> Unit>()
+        var selected: IRule? = null
 
         val types = listOf(
             EditablePatternRule,
@@ -21,7 +24,7 @@ class App(val automaton: Automaton) {
             ElectricityRule.key to { ElectricityRule() }
         )
 
-        private val rules = automaton.layers[0].rules
+        private val rules: MutableList<IRule> = automaton.layers[0].rules
 
         @JsName("getTypes")
         fun getTypes() = types
@@ -47,23 +50,24 @@ class App(val automaton: Automaton) {
         }
 
         @JsName("onChange")
-        fun onChange(listener: (Array<Rule>) -> Unit) {
+        fun onChange(listener: (Array<IRule>) -> Unit) {
             changeListeners += listener
             listener(rules.toTypedArray())
         }
 
         @JsName("onUpdate")
-        fun onUpdate(listener: (Rule) -> Unit) {
+        fun onUpdate(listener: (IRule) -> Unit) {
             updateListeners += listener
         }
 
         @JsName("doUpdate")
-        fun doUpdate(rule: Rule) {
+        fun doUpdate(rule: IRule) {
             updateListeners.forEach { it(rule) }
+            layer.refresh()
         }
 
         @JsName("onSelect")
-        fun onSelect(listener: (Rule?) -> Unit) {
+        fun onSelect(listener: (IRule?) -> Unit) {
             selectListeners += listener
             listener(selected)
         }
@@ -73,7 +77,7 @@ class App(val automaton: Automaton) {
         }
 
         @JsName("select")
-        fun select(rule: Rule?) {
+        fun select(rule: IRule?) {
             selected = rule
             doSelect()
         }
@@ -86,11 +90,17 @@ class App(val automaton: Automaton) {
         }
 
         @JsName("delete")
-        fun delete(rule: Rule) {
+        fun delete(rule: IRule) {
             val index = rules.indexOf(rule)
             rules.remove(rule)
             select(rules.getOrNull(index))
             doChange()
+        }
+
+        @JsName("setName")
+        fun setName(rule: EditableNamedRule, name: String) {
+            rule.name = name
+            doUpdate(rule)
         }
 
         private fun doChange() {
@@ -131,6 +141,19 @@ class App(val automaton: Automaton) {
         @JsName("setOutput")
         fun setOutput(rule: EditablePatternRule, position: Position, cellType: CellType) {
             rule.setOutput(position.x, position.y, cellType)
+            Rules.doUpdate(rule)
+        }
+    }
+
+    val RandomWalkRules = object {
+        @JsName("setCellType")
+        fun setCellType(rule: RandomWalkRule, cellType: CellType) {
+            rule.cellType = cellType
+            Rules.doUpdate(rule)
+        }
+        @JsName("setBackground")
+        fun setBackground(rule: RandomWalkRule, cellType: CellType) {
+            rule.background = cellType
             Rules.doUpdate(rule)
         }
     }

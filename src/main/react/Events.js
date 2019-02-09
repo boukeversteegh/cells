@@ -1,7 +1,5 @@
 class Events {
     static RULES_CHANGED = 0;
-    static RULE_UPDATED = 2;
-    static RULE_DELETED = 3;
     static RULE_SELECTED = 1;
     static CELL_TYPE_SELECTED = 4;
     static CELL_TYPES_CHANGED = 6;

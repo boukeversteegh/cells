@@ -3,9 +3,6 @@ import './RuleDetails.css';
 
 import Core from "./Core"
 
-
-
-
 import Cells from "../../build/cells";
 
 class RuleDetails extends Component {
@@ -36,8 +33,7 @@ class RuleDetails extends Component {
     }
 
     onChangeName(event) {
-        this.state.rule.name = event.target.value;
-        this.props.app.Rules.doUpdate(this.state.rule);
+        this.props.app.Rules.setName(this.state.rule, event.target.value);
     }
 
     onChangeRotatable(event) {

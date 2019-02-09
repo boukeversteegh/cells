@@ -31,10 +31,6 @@ class App extends Component {
             this.setState({selectedRule: rule});
         });
 
-        events.on(Events.RULE_UPDATED, (rule) => {
-            layer.ruleUpdated();
-        });
-
         events.on(Events.CELL_TYPE_SELECTED, cellType => {
             this.setState({selectedCellType: cellType});
         });

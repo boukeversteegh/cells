@@ -81,7 +81,6 @@ class PatternRule extends Component {
                         key={index}
                         cellType={cellType}
                         dim={!hasOutput}
-                        // selected={pos.x === 0 && pos.y === 0}
                         onClick={() => {
                             self.clickOutputCell(pos.x, pos.y)
                         }}/>

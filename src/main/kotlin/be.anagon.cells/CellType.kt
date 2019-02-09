@@ -23,9 +23,7 @@ abstract class CellType {
 }
 
 object None : CellType() {
-    override fun getColor(x: Int, y: Int): Color {
-        return "#000000"
-    }
+    override fun getColor(x: Int, y: Int) = "#000000"
 }
 
 

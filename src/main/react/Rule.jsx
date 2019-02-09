@@ -1,29 +1,27 @@
 import React, {Component} from 'react';
 import './Rule.css';
-import Events from "./Events";
 
 import Core from "./Core"
 import PatternRule from "./PatternRule";
+import RandomWalkRule from "./RandomWalkRule";
 
 class Rule extends Component {
     constructor(props) {
         super(props);
 
         this.state = {selected: false};
-
-        if (props.events) {
-            props.events.on(Events.RULE_UPDATED, (rule) => {
-                if (rule === props.rule) {
-                    this.forceUpdate();
-                }
-            });
-        }
     }
 
     componentDidMount() {
         this.props.app.Rules.onSelect(rule => this.setState({
             selected: (rule === this.props.rule)
         }));
+
+        this.props.app.Rules.onUpdate(rule => {
+            if (rule === this.props.rule) {
+                this.forceUpdate();
+            }
+        })
     }
 
 
@@ -40,11 +38,10 @@ class Rule extends Component {
 
         let ruleBody = '';
         if (rule instanceof Core.PatternRule) {
-            ruleBody = <PatternRule
-                rule={rule}
-                app={this.props.app}
-                selected={selected}
-            />;
+            ruleBody = <PatternRule rule={rule} app={this.props.app}/>;
+        }
+        if (rule instanceof Core.RandomWalkRule) {
+            ruleBody = <RandomWalkRule rule={rule} app={this.props.app}/>;
         }
         return <div className="rule" data-editable={editable | 0} data-selected={selected | 0}>
             <div className="header" onClick={() => this.props.app.Rules.select(rule)}>{name}</div>

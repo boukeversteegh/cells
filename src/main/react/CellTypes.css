@@ -2,3 +2,7 @@
     background-color: #CCCCCC;
     clear: both;
 }
+
+#cell-types .cell {
+    float: left;
+}

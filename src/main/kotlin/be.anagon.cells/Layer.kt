@@ -5,15 +5,14 @@ import kotlin.js.json
 
 class Layer(private val w: Int, private val h: Int) {
     val cellTypes = mutableListOf<CellType>()
-    val rules = mutableListOf<Rule>()
+    val rules = mutableListOf<IRule>()
     private val cells = Array(h) { Array<CellType>(w) { None } }
 
     private val changes = mutableSetOf<Position>()
 
     private var evaluateEntireLayer = false
 
-    @JsName("ruleUpdated")
-    fun ruleUpdated() {
+    fun refresh() {
         evaluateEntireLayer = true
     }
 
@@ -61,7 +60,7 @@ class Layer(private val w: Int, private val h: Int) {
     }
 
     @JsName("getRules")
-    fun getRules(): Array<Rule> {
+    fun getRules(): Array<IRule> {
         return rules.toTypedArray()
     }
 
