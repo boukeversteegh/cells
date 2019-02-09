@@ -17,7 +17,7 @@ class Rule extends Component {
             selected: (rule === this.props.rule)
         }));
 
-        this.props.app.Rules.onUpdate(rule => {
+        this.props.app.Rules.updates.observe(rule => {
             if (rule === this.props.rule) {
                 this.forceUpdate();
             }

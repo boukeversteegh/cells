@@ -21,7 +21,7 @@ class RuleDetails extends Component {
     componentDidMount() {
         this.props.app.Rules.changes.observe(rules => this.setState({rules: rules}));
         this.props.app.Rules.selected.observe(rule => this.loadRule(rule));
-        this.props.app.Rules.onUpdate(rule => this.loadRule(rule));
+        this.props.app.Rules.updates.observe(rule => this.loadRule(rule));
     }
 
     loadRule(rule) {
@@ -38,7 +38,7 @@ class RuleDetails extends Component {
 
     onChangeRotatable(event) {
         this.state.rule.rotatable = event.target.checked;
-        this.props.app.Rules.doUpdate(this.state.rule);
+        this.props.app.Rules.update(this.state.rule);
     }
 
     render() {

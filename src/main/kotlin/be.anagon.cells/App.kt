@@ -7,15 +7,22 @@ class App(val automaton: Automaton) {
     val layer: Layer
         get() = automaton.layers[0]
 
-    class Observable<T>(private var initialValue: T, private val triggerOnListen: Boolean) {
+    init {
+        // Event propagation
+        Rules.updates.observe {
+            layer.refresh()
+        }
+    }
+
+    class Observable<T>(private var initialValue: T? = null, private val triggerOnListen: Boolean) {
         private val listeners = mutableListOf<(T) -> Unit>()
 
         @JsName("observe")
         @Suppress("unused")
         fun observe(listener: (T) -> Unit) {
             listeners += listener
-            if (triggerOnListen) {
-                listener.invoke(initialValue)
+            if (initialValue != null && triggerOnListen) {
+                listener.invoke(initialValue!!)
             }
         }
 
@@ -27,8 +34,8 @@ class App(val automaton: Automaton) {
 
     inner class RulesController {
         val changes = Observable(layer.rules.toTypedArray(), true)
+        val updates = Observable<IRule>(triggerOnListen = false)
 
-        private val changeListeners = mutableListOf<(Array<IRule>) -> Unit>()
         private val updateListeners = mutableListOf<(IRule) -> Unit>()
 
         @Suppress("unused")
@@ -74,15 +81,9 @@ class App(val automaton: Automaton) {
             return EditablePatternRule.new()
         }
 
-        @JsName("onUpdate")
-        fun onUpdate(listener: (IRule) -> Unit) {
-            updateListeners += listener
-        }
-
-        @JsName("doUpdate")
-        fun doUpdate(rule: IRule) {
-            updateListeners.forEach { it(rule) }
-            layer.refresh()
+        @JsName("update")
+        fun update(rule: IRule) {
+            updates.push(rule)
         }
 
         @JsName("select")
@@ -91,7 +92,7 @@ class App(val automaton: Automaton) {
         @JsName("clear")
         fun clear() {
             rules.clear()
-            selected.push(null)
+            select(null)
             doChange()
         }
 
@@ -99,14 +100,14 @@ class App(val automaton: Automaton) {
         fun delete(rule: IRule) {
             val index = rules.indexOf(rule)
             rules.remove(rule)
-            selected.push(rules.getOrNull(index))
+            select(rules.getOrNull(index))
             doChange()
         }
 
         @JsName("setName")
         fun setName(rule: EditableNamedRule, name: String) {
             rule.name = name
-            doUpdate(rule)
+            update(rule)
         }
 
         internal fun doChange() = changes.push(rules.toTypedArray())
@@ -129,13 +130,13 @@ class App(val automaton: Automaton) {
         @JsName("setInput")
         fun setInput(rule: EditablePatternRule, position: Position, cellType: CellType) {
             rule.setInput(position.x, position.y, cellType)
-            Rules.doUpdate(rule)
+            Rules.update(rule)
         }
 
         @JsName("setOutput")
         fun setOutput(rule: EditablePatternRule, position: Position, cellType: CellType) {
             rule.setOutput(position.x, position.y, cellType)
-            Rules.doUpdate(rule)
+            Rules.update(rule)
         }
     }
 
@@ -143,12 +144,12 @@ class App(val automaton: Automaton) {
         @JsName("setCellType")
         fun setCellType(rule: RandomWalkRule, cellType: CellType) {
             rule.cellType = cellType
-            Rules.doUpdate(rule)
+            Rules.update(rule)
         }
         @JsName("setBackground")
         fun setBackground(rule: RandomWalkRule, cellType: CellType) {
             rule.background = cellType
-            Rules.doUpdate(rule)
+            Rules.update(rule)
         }
     }
 
