@@ -1,8 +1,20 @@
 #cell-types {
     background-color: #CCCCCC;
     clear: both;
+    vertical-align: top;
 }
 
 #cell-types .cell {
-    float: left;
+    cursor: pointer;
+}
+
+#cell-types .cell-container {
+    vertical-align: top;
+    position: relative;
+    display: inline-block;
+}
+
+#cell-add-button {
+    display: inline-block;
+    cursor: pointer;
 }

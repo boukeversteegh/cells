@@ -118,11 +118,21 @@ class App(val automaton: Automaton) {
 
     inner class CellTypesController {
         val selected = Observable<CellType>(initialValue = Dirt, triggerOnListen = true)
+        val changes = Observable(initialValue = layer.getCellTypes(), triggerOnListen = true)
 
         @JsName("select")
         @Suppress("unused")
         fun select(cellType: CellType) {
             selected.push(cellType)
+        }
+
+        @JsName("add")
+        fun add() {
+            val cellType = CustomCellType("#FF00FF")
+            layer.cellTypes.add(cellType)
+            changes.push(layer.getCellTypes())
+            selected.push(cellType)
+            console.log("Added")
         }
     }
 
