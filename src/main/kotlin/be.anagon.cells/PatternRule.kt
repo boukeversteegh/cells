@@ -15,6 +15,13 @@ private fun PatternMap.matches(position: Position, otherMap: Map<Position, CellT
     }
 }
 
+private fun PatternMap.matches(position: Position, otherMap: Array<Array<CellType>>): Boolean {
+    return isNotEmpty() && all {
+        val p = it.key + position
+        it.value == otherMap.getOrNull(p.y)?.getOrNull(p.x)
+    }
+}
+
 abstract class PatternRule : Rule() {
     abstract val input: PatternMap
     abstract val output: PatternMap
@@ -24,6 +31,10 @@ abstract class PatternRule : Rule() {
     open val rotatedOutputs: Array<PatternMap> = Array(3) { emptyMap<Position, CellType>() }
 
     override fun evaluate(position: Position, cells: Map<Position, CellType>): Map<Position, CellType> {
+        throw Exception("This should not run")
+    }
+
+    override fun evaluate(position: Position, cells: Array<Array<CellType>>): Map<Position, CellType> {
         val changes = mutableMapOf<Position, CellType>()
 
         if (input.isNotEmpty()) {

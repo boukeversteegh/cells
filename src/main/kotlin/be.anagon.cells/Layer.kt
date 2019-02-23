@@ -133,7 +133,7 @@ class Layer(private val w: Int, private val h: Int) {
 
         val changes = mutableMapOf<Position, CellType>()
 
-        val cells = getMap()
+//        val cells = getMap()
         for ((x, y) in positionsToCheck) {
             val p = pos(x, y)
 
