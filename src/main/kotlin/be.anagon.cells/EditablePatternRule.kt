@@ -13,7 +13,8 @@ class EditablePatternRule(
     override var rotatable = false
         set(value) {
             field = value
-            rotatedInputs = calculateRotatedInputs()
+            rotatedInputs = getRotatedPatternMaps(input)
+            rotatedOutputs = getRotatedPatternMaps(output)
         }
 
     override val key = Companion.key
@@ -22,13 +23,14 @@ class EditablePatternRule(
 
     override fun isEditable() = true
 
-    override var rotatedInputs: Array<PatternMap> = calculateRotatedInputs()
+    override var rotatedInputs: Array<PatternMap> = getRotatedPatternMaps(input)
+    override var rotatedOutputs: Array<PatternMap> = getRotatedPatternMaps(output)
 
-    private fun calculateRotatedInputs(): Array<PatternMap> {
+    private fun getRotatedPatternMaps(patternMap: MutablePatternMap): Array<PatternMap> {
         return if (rotatable) arrayOf(
-            input.rotateRight(),
-            input.rotateRight().rotateRight(),
-            input.rotateRight().rotateRight().rotateRight()
+            patternMap.rotateRight(),
+            patternMap.rotateRight().rotateRight(),
+            patternMap.rotateRight().rotateRight().rotateRight()
         ) else emptyArray()
     }
 
@@ -84,7 +86,7 @@ class EditablePatternRule(
         } else {
             input[pos(x, y)] = c
         }
-        rotatedInputs = calculateRotatedInputs()
+        rotatedInputs = getRotatedPatternMaps(input)
     }
 
     @JsName("setOutput")
@@ -94,6 +96,7 @@ class EditablePatternRule(
         } else {
             output[pos(x, y)] = c
         }
+        rotatedOutputs = getRotatedPatternMaps(output)
     }
 
     @JsName("getPositions")
