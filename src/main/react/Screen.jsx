@@ -6,6 +6,12 @@ class Screen extends Component {
     constructor(props) {
         super(props);
         this.canvas = React.createRef();
+        this.fps = React.createRef();
+        this.state = {
+            iterateTime: 0,
+            renderTime: 0,
+            frameTime: 0,
+        }
     }
 
     componentDidMount() {
@@ -34,9 +40,17 @@ class Screen extends Component {
     start() {
         let self = this;
         window.setInterval(function () {
+            let t0 = performance.now();
             self.props.automaton.iterate();
+            let t1 = performance.now();
             self.updateScreen();
-        }, 100);
+            let t2 = performance.now();
+            self.setState({
+                iterateTime: t1 - t0,
+                renderTime: t2 - t1,
+                frameTime: t2 - t0,
+            })
+        }, 1);
     }
 
     updateScreen() {
@@ -51,11 +65,18 @@ class Screen extends Component {
     }
 
     render() {
-        return <canvas
+        return <div id="screen">
+            <canvas
             width={this.props.width}
             height={this.props.height}
             ref={this.canvas}
         />
+            <div id="fps">
+                <div>automaton: {(1000/this.state.iterateTime)|0}</div>
+                <div>renderer: {(1000/this.state.renderTime)|0}</div>
+                <div>{(1000/this.state.frameTime)|0}fps</div>
+            </div>
+        </div>
     }
 }
 

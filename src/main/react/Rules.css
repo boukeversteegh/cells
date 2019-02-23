@@ -1,5 +1,5 @@
 #rules {
-    clear: both;
-    /*min-height: 232px;*/
+    overflow-y: scroll;
     display: flex;
+
 }

@@ -130,9 +130,12 @@ class App(val automaton: Automaton) {
         fun add() {
             val cellType = CustomCellType("#FF00FF")
             layer.cellTypes.add(cellType)
-            changes.push(layer.getCellTypes())
+            doChange()
             selected.push(cellType)
-            console.log("Added")
+        }
+
+        internal fun doChange() {
+            changes.push(layer.getCellTypes())
         }
     }
 
@@ -170,6 +173,7 @@ class App(val automaton: Automaton) {
         fun load(layerState: Json) {
             JsonMapper().fromJson(layer, layerState)
             Rules.doChange()
+            CellTypes.doChange()
         }
     }
 }

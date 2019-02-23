@@ -15,10 +15,19 @@ canvas {
     background-color: #AAAAAA;
 }
 
-canvas {
-    /*float: left;*/
-    /*clear: both;*/
+#screen {
     width: 100%;
     object-fit: contain;
-    /*display: flex;*/
+}
+
+#screen canvas {
+    width: 100%;
+    object-fit: contain;
+}
+
+#screen #fps {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
 }
