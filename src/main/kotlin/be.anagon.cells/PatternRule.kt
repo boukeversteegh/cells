@@ -8,7 +8,7 @@ fun PatternMap.rotateRight(): PatternMap {
          A
          +
 
-         *A
+         +A
 
          */
         val (pos, cellType) = it
@@ -23,13 +23,15 @@ private fun PatternMap.relativeTo(position: Position): PatternMap {
 }
 
 private fun PatternMap.matches(otherMap: Map<Position, CellType>): Boolean {
-    return all { it.value == otherMap[it.key] }
+    return isNotEmpty() && all { it.value == otherMap[it.key] }
 }
 
 abstract class PatternRule : Rule() {
     abstract val input: PatternMap
     abstract val output: PatternMap
     abstract val rotatable: Boolean
+
+    open val rotatedInputs: Array<PatternMap> = Array(3) { emptyMap<Position, CellType>() }
 
     override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
         val changes = mutableMapOf<Position, CellType>()
@@ -42,10 +44,8 @@ abstract class PatternRule : Rule() {
             }
 
             if (rotatable) {
-                var rotatedInput = input
                 var rotatedOutput = output
-                repeat(3) {
-                    rotatedInput = rotatedInput.rotateRight()
+                rotatedInputs.forEach { rotatedInput ->
                     rotatedOutput = rotatedOutput.rotateRight()
                     if (rotatedInput.matches(relativeNeighbors)) {
                         changes.putAll(position + rotatedOutput)

@@ -9,13 +9,28 @@ class EditablePatternRule(
     override val input: MutablePatternMap,
     override val output: MutablePatternMap
 ) : PatternRule(), SerializableRule, NamedRule {
+
     override var rotatable = false
+        set(value) {
+            field = value
+            rotatedInputs = calculateRotatedInputs()
+        }
 
     override val key = Companion.key
 
     override var name = "Pattern Rule"
 
     override fun isEditable() = true
+
+    override var rotatedInputs: Array<PatternMap> = calculateRotatedInputs()
+
+    private fun calculateRotatedInputs(): Array<PatternMap> {
+        return if (rotatable) arrayOf(
+            input.rotateRight(),
+            input.rotateRight().rotateRight(),
+            input.rotateRight().rotateRight().rotateRight()
+        ) else emptyArray()
+    }
 
     companion object {
         const val key = "CustomPatternRule"
@@ -69,6 +84,7 @@ class EditablePatternRule(
         } else {
             input[pos(x, y)] = c
         }
+        rotatedInputs = calculateRotatedInputs()
     }
 
     @JsName("setOutput")

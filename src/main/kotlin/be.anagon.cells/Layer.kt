@@ -12,6 +12,13 @@ class Layer(private val w: Int, private val h: Int) {
 
     private var evaluateEntireLayer = false
 
+    private val positions: Set<Position>
+        get() {
+            return (0 until h).toList().flatMap { y ->
+                (0 until w).map { x -> pos(x, y) }
+            }.toSet()
+        }
+
     fun refresh() {
         evaluateEntireLayer = true
     }
@@ -90,17 +97,13 @@ class Layer(private val w: Int, private val h: Int) {
     private fun getLastChanges(): Set<Position> {
         return if (evaluateEntireLayer) {
             evaluateEntireLayer = false
-            val allPositions = (0 until h).toList().flatMap { y ->
-                (0 until w).map { x -> pos(x, y) }
-            }.toSet()
-            allPositions
+            positions
         } else {
             changes.toSet()
         }
     }
 
     fun iterate() {
-        // todo: re-evaluate entire grid when changing rules
         val lastChanges = getLastChanges()
         changes.clear()
 
