@@ -34,9 +34,7 @@ abstract class PatternRule : Rule() {
         throw Exception("This should not run")
     }
 
-    override fun evaluate(position: Position, cells: Array<Array<CellType>>): Map<Position, CellType> {
-        val changes = mutableMapOf<Position, CellType>()
-
+    override fun evaluate(position: Position, cells: Array<Array<CellType>>, changes: MutablePatternMap) {
         if (input.isNotEmpty()) {
             if (input.matches(position, cells)) {
                 changes.putAll(position + output)
@@ -50,8 +48,6 @@ abstract class PatternRule : Rule() {
                 }
             }
         }
-
-        return changes
     }
 
     // @todo remember center?
