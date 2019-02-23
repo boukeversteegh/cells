@@ -6,12 +6,23 @@ class Screen extends Component {
     constructor(props) {
         super(props);
         this.canvas = React.createRef();
-        this.fps = React.createRef();
         this.state = {
+            frames: 0,
+            startTime: performance.now(),
             iterateTime: 0,
             renderTime: 0,
-            frameTime: 0,
+            frameTime: 0
         }
+    }
+
+    resetStats() {
+        this.setState({
+            frames: 0,
+            startTime: performance.now(),
+            iterateTime: 0,
+            renderTime: 0,
+            frameTime: 0
+        })
     }
 
     componentDidMount() {
@@ -46,9 +57,11 @@ class Screen extends Component {
             self.updateScreen();
             let t2 = performance.now();
             self.setState({
+                frames: self.state.frames + 1,
                 iterateTime: t1 - t0,
                 renderTime: t2 - t1,
                 frameTime: t2 - t0,
+                averageFps: self.state.frames / (performance.now() - self.state.startTime) * 1000
             })
         }, 1);
     }
@@ -71,10 +84,13 @@ class Screen extends Component {
             height={this.props.height}
             ref={this.canvas}
         />
-            <div id="fps">
+            <div id="fps" onClick={() => {
+                this.resetStats()
+            }}>
                 <div>automaton: {(1000/this.state.iterateTime)|0}</div>
                 <div>renderer: {(1000/this.state.renderTime)|0}</div>
                 <div>{(1000/this.state.frameTime)|0}fps</div>
+                <div>{this.state.averageFps | 0}avg fps</div>
             </div>
         </div>
     }
