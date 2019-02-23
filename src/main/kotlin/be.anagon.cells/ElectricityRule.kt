@@ -29,7 +29,7 @@ class ElectricityRule : Rule(), NamedRule, SerializableRule {
 
     override val name = "Electricity"
 
-    override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
+    override fun evaluate(position: Position, cells: Map<Position, CellType>): Map<Position, CellType> {
 
         val neighborPositions = listOf(
             position.above,
@@ -38,21 +38,21 @@ class ElectricityRule : Rule(), NamedRule, SerializableRule {
             position.right
         )
 
-        val directNeighbors = neighbors.filterKeys { it in neighborPositions }
+        val directNeighbors = cells.filterKeys { it in neighborPositions }
 
         // Spread power
-        if (neighbors[position] is Wire && neighbors.filterKeys { it in neighborPositions }.containsValue(PoweredWire)) {
+        if (cells[position] is Wire && cells.filterKeys { it in neighborPositions }.containsValue(PoweredWire)) {
             return mapOf(position to PoweredWire)
         }
 
         // Spread clear wire and turn off power on the way
-        if (neighbors[position] is PoweredWire && directNeighbors.containsValue(ClearWire)) {
+        if (cells[position] is PoweredWire && directNeighbors.containsValue(ClearWire)) {
             return directNeighbors.filterValues { it is ClearWire }.mapValues { Wire } +
                 mapOf(position to ClearWire)
         }
 
         // Remove orphan "clear wire"
-        if (neighbors[position] is ClearWire && !directNeighbors.containsValue(PoweredWire)) {
+        if (cells[position] is ClearWire && !directNeighbors.containsValue(PoweredWire)) {
             return mapOf(position to Wire)
         }
         return emptyMap()

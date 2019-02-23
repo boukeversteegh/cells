@@ -10,10 +10,10 @@ class GameOfLife(private val aliveCellType: CellType = Alive) : Rule(), NamedRul
         const val key = "GameOfLife"
     }
 
-    override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
-        val c = neighbors[position]
+    override fun evaluate(position: Position, cells: Map<Position, CellType>): Map<Position, CellType> {
+        val c = cells[position]
 
-        val aliveCount = neighbors.minus(position).values.count { it === aliveCellType }
+        val aliveCount = cells.minus(position).values.count { it === aliveCellType }
 
         if (c === aliveCellType) {
             // Any live cell with fewer than two live neighbors dies, as if by underpopulation.

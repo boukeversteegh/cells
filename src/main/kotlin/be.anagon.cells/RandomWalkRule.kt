@@ -7,10 +7,10 @@ class RandomWalkRule : Rule(), NamedRule, SerializableRule {
     var cellType: CellType = Any
     var background: CellType = None
 
-    override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
-        if (cellType != Any && neighbors[position] == cellType) {
+    override fun evaluate(position: Position, cells: Map<Position, CellType>): Map<Position, CellType> {
+        if (cellType != Any && cells[position] == cellType) {
             val randomDirection = listOf(position.above, position.below, position.left, position.right).random()
-            if (neighbors[randomDirection] == background) {
+            if (cells[randomDirection] == background) {
                 return mapOf(
                     position to background,
                     randomDirection to cellType

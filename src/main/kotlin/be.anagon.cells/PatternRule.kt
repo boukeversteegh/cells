@@ -4,26 +4,15 @@ typealias PatternMap = Map<Position, CellType>
 
 fun PatternMap.rotateRight(): PatternMap {
     return entries.map {
-        /*
-         A
-         +
-
-         +A
-
-         */
         val (pos, cellType) = it
         Position(x = -pos.y, y = pos.x) to cellType
     }.toMap()
 }
 
-private fun PatternMap.relativeTo(position: Position): PatternMap {
-    return map {
-        (it.key - position) to it.value
-    }.toMap()
-}
-
-private fun PatternMap.matches(otherMap: Map<Position, CellType>): Boolean {
-    return isNotEmpty() && all { it.value == otherMap[it.key] }
+private fun PatternMap.matches(position: Position, otherMap: Map<Position, CellType>): Boolean {
+    return isNotEmpty() && all {
+        it.value == otherMap[it.key + position]
+    }
 }
 
 abstract class PatternRule : Rule() {
@@ -34,19 +23,17 @@ abstract class PatternRule : Rule() {
     open val rotatedInputs: Array<PatternMap> = Array(3) { emptyMap<Position, CellType>() }
     open val rotatedOutputs: Array<PatternMap> = Array(3) { emptyMap<Position, CellType>() }
 
-    override fun evaluate(position: Position, neighbors: Map<Position, CellType>): Map<Position, CellType> {
+    override fun evaluate(position: Position, cells: Map<Position, CellType>): Map<Position, CellType> {
         val changes = mutableMapOf<Position, CellType>()
 
-        val relativeNeighbors = neighbors.relativeTo(position)
-
         if (input.isNotEmpty()) {
-            if (input.matches(relativeNeighbors)) {
+            if (input.matches(position, cells)) {
                 changes.putAll(position + output)
             }
 
             if (rotatable) {
                 for (i in (0..2)) {
-                    if (rotatedInputs[i].matches(relativeNeighbors)) {
+                    if ((rotatedInputs[i]).matches(position, cells)) {
                         changes.putAll(position + rotatedOutputs[i])
                     }
                 }

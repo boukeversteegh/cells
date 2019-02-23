@@ -47,6 +47,16 @@ class Layer(private val w: Int, private val h: Int) {
         return positions.map { it to get(it) }.toMap()
     }
 
+    private fun getMap(): PatternMap {
+        val map = mutableMapOf<Position, CellType>()
+        for (y in 0 until h) {
+            for (x in 0 until w) {
+                map[pos(x,y)] = cells[y][x]
+            }
+        }
+        return map
+    }
+
     @JsName("setByIndex")
     fun set(x: Int, y: Int, cellTypeIndex: Int) {
         set(x, y, cellTypes[cellTypeIndex])
@@ -122,25 +132,13 @@ class Layer(private val w: Int, private val h: Int) {
         }.toSet()
 
         val changes = mutableMapOf<Position, CellType>()
+
+        val cells = getMap()
         for ((x, y) in positionsToCheck) {
             val p = pos(x, y)
 
-            val neighborPositions: List<Position> = listOf(
-                p,
-                p.left,
-                p.right,
-                p.below,
-                p.above,
-                pos(x - 1, y - 1),
-                pos(x - 1, y + 1),
-                pos(x + 1, y - 1),
-                pos(x + 1, y + 1)
-            )
-
-            val neighbors: Map<Position, CellType> = get(neighborPositions)
-
             for (rule in rules) {
-                changes.putAll(rule.evaluate(p, neighbors))
+                changes.putAll(rule.evaluate(p, cells))
             }
         }
 
