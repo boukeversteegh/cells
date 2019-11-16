@@ -8,18 +8,19 @@ class RandomWalkRule : Rule(), NamedRule, SerializableRule {
     var background: CellType = None
 
     override fun evaluate(position: Position, cells: Map<Position, CellType>): Map<Position, CellType> {
+        throw Exception("Should not run")
+    }
+
+    override fun evaluate(position: Position, cells: Map<Position, CellType>, changes: MutableMap<Position, CellType>) {
         if (cellType != Any && cells[position] == cellType) {
             val randomDirection = listOf(position.above, position.below, position.left, position.right).random()
             if (cells[randomDirection] == background) {
-                return mapOf(
-                    position to background,
-                    randomDirection to cellType
-                )
+                changes[position] = background
+                changes[randomDirection] = cellType
+                return
             }
-            return mapOf(position to cellType)
+            changes[position] = cellType
         }
-
-        return emptyMap()
     }
 
     override var name: String = "RandomWalk"

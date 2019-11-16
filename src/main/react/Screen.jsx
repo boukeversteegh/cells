@@ -63,7 +63,7 @@ class Screen extends Component {
                 frameTime: t2 - t0,
                 averageFps: self.state.frames / (performance.now() - self.state.startTime) * 1000
             })
-        }, 1);
+        }, 50);
     }
 
     updateScreen() {
